@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  postgres_db:
+    ports:
+      - 5432:5432
+    image: "postgres:14"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - "local-infra-postgresdb-db:/var/lib/postgresql/data"
+
+  redis:
+    image: redis:6.2.5
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: redis-cli ping
+    volumes: 
+      - cache:/data
+
+volumes:
+  local-infra-postgresdb-db:
+    driver: local
+  cache:
+    driver: local

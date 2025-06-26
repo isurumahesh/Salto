@@ -1,0 +1,949 @@
+{
+	"info": {
+		"_postman_id": "c045cc54-246e-45f8-b896-6cea6fa41115",
+		"name": "Test Case",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9567254"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "Get User Token",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "openid profile scwapi:use",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://localhost:44300/signin-oidc",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{interactive-client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://localhost:5001/connect/token",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://localhost:5001/connect/authorize",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "Playground",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "queryParams",
+									"type": "string"
+								},
+								{
+									"key": "challengeAlgorithm",
+									"value": "S256",
+									"type": "string"
+								},
+								{
+									"key": "state",
+									"value": "12312312324",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get server to server token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"tests[\"Access token isset\"] = jsonData.access_token !== undefined;\r",
+									"\r",
+									"postman.setEnvironmentVariable(\"at\", jsonData.access_token);\r",
+									"postman.setEnvironmentVariable(\"rt\", jsonData.refresh_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{server-to-server-client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{server-to-server-client_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "scope \n",
+									"value": "scwapi:manage",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{idp_url}}/connect/token",
+							"host": [
+								"{{idp_url}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Platform Management token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{platform_management_client_id}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{platform_management_client_secret}}",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "intercom_api.platform.manage",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{idp_url}}/connect/token",
+									"host": [
+										"{{idp_url}}"
+									],
+									"path": [
+										"connect",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 21 Jul 2023 10:31:26 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store, no-cache, max-age=0"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "CLP-Correlation-Id",
+									"value": "c9cc7e95-2084-4c74-9099-e02cb987b4c8"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15724800; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1;mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src 'self'; font-src 'self'  data: fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; img-src * data:; frame-ancestors 'self' *.saltoks.com; script-src 'self' https://ipinfo.io/ 'unsafe-inline';"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none;"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-Content-Security-Policy",
+									"value": "default-src 'self'; font-src 'self'  data: fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; img-src * data:; frame-ancestors 'self' *.saltoks.com; script-src 'self' https://ipinfo.io/ 'unsafe-inline';"
+								},
+								{
+									"key": "X-Rate-Limit-Limit",
+									"value": "1h"
+								},
+								{
+									"key": "X-Rate-Limit-Remaining",
+									"value": "9986"
+								},
+								{
+									"key": "X-Rate-Limit-Reset",
+									"value": "2023-07-21T11:24:38.4667708Z"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyRDU3RkVDOUM2RDI4MjRBMENEMkE0MjZCMkJFODUyIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5LWRldi1ldS5teS1jbGF5LmNvbSIsIm5iZiI6MTY4OTkzNTQ4NiwiaWF0IjoxNjg5OTM1NDg2LCJleHAiOjE2ODk5MzkwODYsImF1ZCI6InNhbHRvX3NtYXJ0X2ludGVyY29tIiwic2NvcGUiOlsiaW50ZXJjb21fYXBpLnBsYXRmb3JtLm1hbmFnZSJdLCJjbGllbnRfaWQiOiI3MDIwYWZlYi0wOWVjLTQ5NGMtOTU5Zi1lYjhkMDRiZjQ2ODUifQ.RjuTy7qzB93TNkDtu8i3WaiuSA4ioq3Its7t33rh28HAGcKAjbppUXZKloasPrdxvrJNzv2kyu81NYC2nKd9NzUjzN5nHqxwjZv5Lxc4PEZcV_zS12AuQyTCgHf5MVVtTiUcF7WVT3gNIGJqghK-IZJCZ8rNoqsPTOrPhetqAKdA3xTlkgINVBKcWvorNXf6LN-KxCsJ0VNyAPZDehDSYm35jxSNl5Sx91_IWzcUPaYd8ZZaiGFqQBo8K7eBYk1Cor4UcL4U2WVQcWEcPkf99bvT3Ad_yMN2BrNOJd7omuuJe2hOC1HeBtH87ZELz9iPiobzBkLoI4Fl89HrvfsP9Q\",\n    \"expires_in\": 3600,\n    \"token_type\": \"Bearer\",\n    \"scope\": \"intercom_api.platform.manage\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Sites",
+			"item": [
+				{
+					"name": "GetSites",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{at}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/sites",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"sites"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logs",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{at}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/{{version}}/products/:productId/tenants/:tenantId/auditLogs?$filter=correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"{{version}}",
+										"products",
+										":productId",
+										"tenants",
+										":tenantId",
+										"auditLogs"
+									],
+									"query": [
+										{
+											"key": "$filter",
+											"value": "siteId eq 17ff61c0-0e9d-4b39-b50a-124310fd3fd9 and actorId eq d4db7de5-12e5-4b6e-9642-cdd9a448276b and startDate gt 2024-11-14T00:00:00.000Z",
+											"disabled": true
+										},
+										{
+											"key": "$filter",
+											"value": "correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565"
+										}
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "a5fda6d4-6817-40f1-8635-4131db3054cb"
+										},
+										{
+											"key": "tenantId",
+											"value": "8d2743de-2fd2-11e7-b054-00505692f7ce"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 19 Nov 2024 07:48:33 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CLAY-Correlation-Id",
+									"value": "d93f5742-5b41-44a3-913a-63cb030f7ff3"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1;mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "object-src 'self';block-all-mixed-content;upgrade-insecure-requests;"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none;"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"id\": \"a2e6d25b-46a2-4086-afc0-9ac9988b3099\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"applicationName\": \"Connect API\",\n            \"origin\": \"api\",\n            \"type\": \"PATCH http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"startDate\": \"2024-11-15T01:33:18.985762+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.058593+00:00\",\n            \"duration\": \"00:00:00.0730000\",\n            \"success\": true,\n            \"actorId\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n            \"actorType\": \"user\",\n            \"name\": \"API action\",\n            \"action\": \"patch\",\n            \"auditData\": {\n                \"properties\": {},\n                \"target\": \"Core API\",\n                \"url\": \"http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                \"requestBody\": \"{\\\"start_date\\\":\\\"2024-11-16T00:00:00Z\\\",\\\"end_date\\\":null,\\\"end_time\\\":\\\"23:59:00\\\",\\\"start_time\\\":\\\"00:00:00\\\",\\\"monday\\\":true,\\\"tuesday\\\":true,\\\"wednesday\\\":true,\\\"thursday\\\":true,\\\"friday\\\":true,\\\"saturday\\\":true,\\\"sunday\\\":true}\"\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"\"\n                    }\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        },\n        {\n            \"id\": \"de36aab4-40c9-487f-a76d-21ca9a7efa85\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"objectId\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"applicationName\": \"CORE API\",\n            \"origin\": \"database\",\n            \"type\": \"AccessChange\",\n            \"startDate\": \"2024-11-15T01:33:19.037349+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.055845+00:00\",\n            \"duration\": \"00:00:00.0180000\",\n            \"success\": true,\n            \"actorId\": \"09460d92-1e11-4a9b-b36f-ab1c916f16c4\",\n            \"actorType\": \"service\",\n            \"name\": \"AccessSchedule\",\n            \"action\": \"update\",\n            \"auditData\": {\n                \"changes\": [\n                    {\n                        \"columnName\": \"start_date\",\n                        \"originalValue\": \"\",\n                        \"newValue\": \"2024-11-16T00:00:00Z\"\n                    }\n                ],\n                \"properties\": {\n                    \"id\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                    \"days\": \"127\",\n                    \"end_date\": \"\",\n                    \"end_time\": \"23:59:59\",\n                    \"start_date\": \"2024-11-16T00:00:00Z\",\n                    \"start_time\": \"00:00:00\",\n                    \"access_group_id\": \"f55dc39e-953d-48e1-b9cb-b7bcc9bd2745\"\n                }\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        }\n    ],\n    \"nextPageLink\": null,\n    \"count\": null\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "AccessPoints",
+			"item": [
+				{
+					"name": "Get Access Points",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{at}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/sites/:siteId/accessPoints",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"sites",
+								":siteId",
+								"accessPoints"
+							],
+							"variable": [
+								{
+									"key": "siteId",
+									"value": "eac30e40-0c9f-4851-aba8-ab6445641428"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logs",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{at}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/{{version}}/products/:productId/tenants/:tenantId/auditLogs?$filter=correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"{{version}}",
+										"products",
+										":productId",
+										"tenants",
+										":tenantId",
+										"auditLogs"
+									],
+									"query": [
+										{
+											"key": "$filter",
+											"value": "siteId eq 17ff61c0-0e9d-4b39-b50a-124310fd3fd9 and actorId eq d4db7de5-12e5-4b6e-9642-cdd9a448276b and startDate gt 2024-11-14T00:00:00.000Z",
+											"disabled": true
+										},
+										{
+											"key": "$filter",
+											"value": "correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565"
+										}
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "a5fda6d4-6817-40f1-8635-4131db3054cb"
+										},
+										{
+											"key": "tenantId",
+											"value": "8d2743de-2fd2-11e7-b054-00505692f7ce"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 19 Nov 2024 07:48:33 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CLAY-Correlation-Id",
+									"value": "d93f5742-5b41-44a3-913a-63cb030f7ff3"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1;mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "object-src 'self';block-all-mixed-content;upgrade-insecure-requests;"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none;"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"id\": \"a2e6d25b-46a2-4086-afc0-9ac9988b3099\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"applicationName\": \"Connect API\",\n            \"origin\": \"api\",\n            \"type\": \"PATCH http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"startDate\": \"2024-11-15T01:33:18.985762+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.058593+00:00\",\n            \"duration\": \"00:00:00.0730000\",\n            \"success\": true,\n            \"actorId\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n            \"actorType\": \"user\",\n            \"name\": \"API action\",\n            \"action\": \"patch\",\n            \"auditData\": {\n                \"properties\": {},\n                \"target\": \"Core API\",\n                \"url\": \"http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                \"requestBody\": \"{\\\"start_date\\\":\\\"2024-11-16T00:00:00Z\\\",\\\"end_date\\\":null,\\\"end_time\\\":\\\"23:59:00\\\",\\\"start_time\\\":\\\"00:00:00\\\",\\\"monday\\\":true,\\\"tuesday\\\":true,\\\"wednesday\\\":true,\\\"thursday\\\":true,\\\"friday\\\":true,\\\"saturday\\\":true,\\\"sunday\\\":true}\"\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"\"\n                    }\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        },\n        {\n            \"id\": \"de36aab4-40c9-487f-a76d-21ca9a7efa85\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"objectId\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"applicationName\": \"CORE API\",\n            \"origin\": \"database\",\n            \"type\": \"AccessChange\",\n            \"startDate\": \"2024-11-15T01:33:19.037349+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.055845+00:00\",\n            \"duration\": \"00:00:00.0180000\",\n            \"success\": true,\n            \"actorId\": \"09460d92-1e11-4a9b-b36f-ab1c916f16c4\",\n            \"actorType\": \"service\",\n            \"name\": \"AccessSchedule\",\n            \"action\": \"update\",\n            \"auditData\": {\n                \"changes\": [\n                    {\n                        \"columnName\": \"start_date\",\n                        \"originalValue\": \"\",\n                        \"newValue\": \"2024-11-16T00:00:00Z\"\n                    }\n                ],\n                \"properties\": {\n                    \"id\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                    \"days\": \"127\",\n                    \"end_date\": \"\",\n                    \"end_time\": \"23:59:59\",\n                    \"start_date\": \"2024-11-16T00:00:00Z\",\n                    \"start_time\": \"00:00:00\",\n                    \"access_group_id\": \"f55dc39e-953d-48e1-b9cb-b7bcc9bd2745\"\n                }\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        }\n    ],\n    \"nextPageLink\": null,\n    \"count\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Open Access Point",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{at}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"profileId\": \"0f27aa69-e10f-45e4-a37e-fd23cc8c2975\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/sites/:siteId/accessPoints/:accessPointId/open",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"sites",
+								":siteId",
+								"accessPoints",
+								":accessPointId",
+								"open"
+							],
+							"variable": [
+								{
+									"key": "siteId",
+									"value": "0f27aa69-e10f-45e4-a37e-fd23cc8c2975"
+								},
+								{
+									"key": "accessPointId",
+									"value": "0f27aa69-e10f-45e4-a37e-fd23cc8c2975"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logs",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{at}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/{{version}}/products/:productId/tenants/:tenantId/auditLogs?$filter=correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"{{version}}",
+										"products",
+										":productId",
+										"tenants",
+										":tenantId",
+										"auditLogs"
+									],
+									"query": [
+										{
+											"key": "$filter",
+											"value": "siteId eq 17ff61c0-0e9d-4b39-b50a-124310fd3fd9 and actorId eq d4db7de5-12e5-4b6e-9642-cdd9a448276b and startDate gt 2024-11-14T00:00:00.000Z",
+											"disabled": true
+										},
+										{
+											"key": "$filter",
+											"value": "correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565"
+										}
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "a5fda6d4-6817-40f1-8635-4131db3054cb"
+										},
+										{
+											"key": "tenantId",
+											"value": "8d2743de-2fd2-11e7-b054-00505692f7ce"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 19 Nov 2024 07:48:33 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CLAY-Correlation-Id",
+									"value": "d93f5742-5b41-44a3-913a-63cb030f7ff3"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1;mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "object-src 'self';block-all-mixed-content;upgrade-insecure-requests;"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none;"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"id\": \"a2e6d25b-46a2-4086-afc0-9ac9988b3099\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"applicationName\": \"Connect API\",\n            \"origin\": \"api\",\n            \"type\": \"PATCH http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"startDate\": \"2024-11-15T01:33:18.985762+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.058593+00:00\",\n            \"duration\": \"00:00:00.0730000\",\n            \"success\": true,\n            \"actorId\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n            \"actorType\": \"user\",\n            \"name\": \"API action\",\n            \"action\": \"patch\",\n            \"auditData\": {\n                \"properties\": {},\n                \"target\": \"Core API\",\n                \"url\": \"http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                \"requestBody\": \"{\\\"start_date\\\":\\\"2024-11-16T00:00:00Z\\\",\\\"end_date\\\":null,\\\"end_time\\\":\\\"23:59:00\\\",\\\"start_time\\\":\\\"00:00:00\\\",\\\"monday\\\":true,\\\"tuesday\\\":true,\\\"wednesday\\\":true,\\\"thursday\\\":true,\\\"friday\\\":true,\\\"saturday\\\":true,\\\"sunday\\\":true}\"\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"\"\n                    }\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        },\n        {\n            \"id\": \"de36aab4-40c9-487f-a76d-21ca9a7efa85\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"objectId\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"applicationName\": \"CORE API\",\n            \"origin\": \"database\",\n            \"type\": \"AccessChange\",\n            \"startDate\": \"2024-11-15T01:33:19.037349+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.055845+00:00\",\n            \"duration\": \"00:00:00.0180000\",\n            \"success\": true,\n            \"actorId\": \"09460d92-1e11-4a9b-b36f-ab1c916f16c4\",\n            \"actorType\": \"service\",\n            \"name\": \"AccessSchedule\",\n            \"action\": \"update\",\n            \"auditData\": {\n                \"changes\": [\n                    {\n                        \"columnName\": \"start_date\",\n                        \"originalValue\": \"\",\n                        \"newValue\": \"2024-11-16T00:00:00Z\"\n                    }\n                ],\n                \"properties\": {\n                    \"id\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                    \"days\": \"127\",\n                    \"end_date\": \"\",\n                    \"end_time\": \"23:59:59\",\n                    \"start_date\": \"2024-11-16T00:00:00Z\",\n                    \"start_time\": \"00:00:00\",\n                    \"access_group_id\": \"f55dc39e-953d-48e1-b9cb-b7bcc9bd2745\"\n                }\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        }\n    ],\n    \"nextPageLink\": null,\n    \"count\": null\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Add Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{at}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Personal Tutor\",\r\n    \"users\": [\r\n        \"neville.longbottom@hogwarts.com\",\r\n        \"severus.snape@hogwarts.com\"\r\n    ],\r\n    \"accessPoints\": [\r\n        \"ef99e465-7b7f-4f95-a2b0-a5cb5e904ed4\",\r\n        \"d97880b2-709c-4451-b9ea-888ab4489654\"\r\n    ],\r\n    \"schedules\": [\r\n        {\r\n            \"start\": \"2025-06-22T21:19:31.814Z\",\r\n            \"end\": \"2025-06-22T23:19:31.814Z\"\r\n        },\r\n        {\r\n            \"start\": \"2025-06-24T12:19:31.814Z\",\r\n            \"end\": \"2025-06-24T14:19:31.814Z\"\r\n        },\r\n        {\r\n            \"start\": \"2025-06-28T14:19:31.814Z\",\r\n            \"end\": \"2025-06-28T17:19:31.814Z\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/sites/:siteId/bookings",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"sites",
+								":siteId",
+								"bookings"
+							],
+							"variable": [
+								{
+									"key": "siteId",
+									"value": "eac30e40-0c9f-4851-aba8-ab6445641428"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logs",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{at}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{api_url}}/{{version}}/products/:productId/tenants/:tenantId/auditLogs?$filter=correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"{{version}}",
+										"products",
+										":productId",
+										"tenants",
+										":tenantId",
+										"auditLogs"
+									],
+									"query": [
+										{
+											"key": "$filter",
+											"value": "siteId eq 17ff61c0-0e9d-4b39-b50a-124310fd3fd9 and actorId eq d4db7de5-12e5-4b6e-9642-cdd9a448276b and startDate gt 2024-11-14T00:00:00.000Z",
+											"disabled": true
+										},
+										{
+											"key": "$filter",
+											"value": "correlationId eq 77ff65a8-afed-4547-bbbf-cd4d65076565"
+										}
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "a5fda6d4-6817-40f1-8635-4131db3054cb"
+										},
+										{
+											"key": "tenantId",
+											"value": "8d2743de-2fd2-11e7-b054-00505692f7ce"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 19 Nov 2024 07:48:33 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "CLAY-Correlation-Id",
+									"value": "d93f5742-5b41-44a3-913a-63cb030f7ff3"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1;mode=block"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "object-src 'self';block-all-mixed-content;upgrade-insecure-requests;"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none;"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"id\": \"a2e6d25b-46a2-4086-afc0-9ac9988b3099\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"applicationName\": \"Connect API\",\n            \"origin\": \"api\",\n            \"type\": \"PATCH http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"startDate\": \"2024-11-15T01:33:18.985762+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.058593+00:00\",\n            \"duration\": \"00:00:00.0730000\",\n            \"success\": true,\n            \"actorId\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n            \"actorType\": \"user\",\n            \"name\": \"API action\",\n            \"action\": \"patch\",\n            \"auditData\": {\n                \"properties\": {},\n                \"target\": \"Core API\",\n                \"url\": \"http://coreapi.coreapi/v1.2/access_groups/f55dc39e-953d-48e1-b9cb-b7bcc9bd2745/time_schedules/788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                \"requestBody\": \"{\\\"start_date\\\":\\\"2024-11-16T00:00:00Z\\\",\\\"end_date\\\":null,\\\"end_time\\\":\\\"23:59:00\\\",\\\"start_time\\\":\\\"00:00:00\\\",\\\"monday\\\":true,\\\"tuesday\\\":true,\\\"wednesday\\\":true,\\\"thursday\\\":true,\\\"friday\\\":true,\\\"saturday\\\":true,\\\"sunday\\\":true}\"\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"d4db7de5-12e5-4b6e-9642-cdd9a448276b\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"\"\n                    }\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        },\n        {\n            \"id\": \"de36aab4-40c9-487f-a76d-21ca9a7efa85\",\n            \"productId\": \"a5fda6d4-6817-40f1-8635-4131db3054cb\",\n            \"tenantId\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n            \"siteId\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n            \"correlationId\": \"77ff65a8-afed-4547-bbbf-cd4d65076565\",\n            \"objectId\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n            \"applicationName\": \"CORE API\",\n            \"origin\": \"database\",\n            \"type\": \"AccessChange\",\n            \"startDate\": \"2024-11-15T01:33:19.037349+00:00\",\n            \"endDate\": \"2024-11-15T01:33:19.055845+00:00\",\n            \"duration\": \"00:00:00.0180000\",\n            \"success\": true,\n            \"actorId\": \"09460d92-1e11-4a9b-b36f-ab1c916f16c4\",\n            \"actorType\": \"service\",\n            \"name\": \"AccessSchedule\",\n            \"action\": \"update\",\n            \"auditData\": {\n                \"changes\": [\n                    {\n                        \"columnName\": \"start_date\",\n                        \"originalValue\": \"\",\n                        \"newValue\": \"2024-11-16T00:00:00Z\"\n                    }\n                ],\n                \"properties\": {\n                    \"id\": \"788b96e8-849e-49be-aec0-d775d8e3b1ff\",\n                    \"days\": \"127\",\n                    \"end_date\": \"\",\n                    \"end_time\": \"23:59:59\",\n                    \"start_date\": \"2024-11-16T00:00:00Z\",\n                    \"start_time\": \"00:00:00\",\n                    \"access_group_id\": \"f55dc39e-953d-48e1-b9cb-b7bcc9bd2745\"\n                }\n            },\n            \"enrichment\": [\n                {\n                    \"id\": \"8d2743de-2fd2-11e7-b054-00505692f7ce\",\n                    \"customerReference\": \"SALTO Keys as a Service\"\n                },\n                {\n                    \"id\": \"f94e2ec3-0008-46f3-a409-13b422cc53d9\",\n                    \"customerReference\": null,\n                    \"extraInfo\": {\n                        \"email\": \"marjorie.marcus@lockandstore.com\",\n                        \"lastName\": \"MARCUS\",\n                        \"firstName\": \"Marjorie\",\n                        \"siteUserId\": \"192a2b77-13d2-4971-9eb6-82ca811bb98c\"\n                    }\n                },\n                {\n                    \"id\": \"17ff61c0-0e9d-4b39-b50a-124310fd3fd9\",\n                    \"customerReference\": \"Lock + Store (MNY)\"\n                }\n            ]\n        }\n    ],\n    \"nextPageLink\": null,\n    \"count\": null\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "jwt",
+		"jwt": [
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "algorithm",
+				"value": "HS256",
+				"type": "string"
+			},
+			{
+				"key": "isSecretBase64Encoded",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "payload",
+				"value": "{}",
+				"type": "string"
+			},
+			{
+				"key": "headerPrefix",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "queryParamKey",
+				"value": "token",
+				"type": "string"
+			},
+			{
+				"key": "header",
+				"value": "{}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
