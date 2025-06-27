@@ -1,12 +1,8 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.Bookings;
+using Ical.Net;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Persistence.Bookings
 {
@@ -41,7 +37,41 @@ namespace CloudWorks.Persistence.Bookings
                 _context.Bookings.Remove(booking);
         }
 
+        public async Task<bool> HasValidBookingAsync(string userEmail, Guid accessPointId, Guid siteId, DateTime now, CancellationToken cancellationToken)
+        {
+            var bookings = await _context.Bookings
+            .Include(b => b.Schedules)
+            .Include(b => b.AccessPoints)
+            .Include(b => b.Profiles)
+                .ThenInclude(sp => sp.Profile)
+            .Where(b =>
+                b.SiteId == siteId &&
+                b.AccessPoints.Any(ap => ap.Id == accessPointId) &&
+                b.Profiles.Any(p => p.Profile.Email == userEmail))
+            .ToListAsync(cancellationToken);
+
+            foreach (var booking in bookings)
+            {
+                foreach (var schedule in booking.Schedules)
+                {
+                    if (IsNowInSchedule(schedule.Value, now))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
             _context.SaveChangesAsync(cancellationToken);
+
+        private bool IsNowInSchedule(string icalString, DateTime nowUtc)
+        {
+            var calendar = Calendar.Load(icalString);
+            var events = calendar.Events;
+
+            return events.Any(ev =>
+                ev.Start.AsUtc <= nowUtc && ev.End.AsUtc >= nowUtc);
+        }
     }
 }

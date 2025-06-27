@@ -1,10 +1,5 @@
 ﻿using CloudWorks.Services.Contracts.Sites;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.Sites
 {
@@ -20,7 +15,7 @@ namespace CloudWorks.Application.Commands.Sites
         public async Task Handle(DeleteSiteCommand request, CancellationToken cancellationToken)
         {
             await _repository.DeleteAsync(request.Id);
-            await _repository.SaveChangesAsync(cancellationToken);           
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

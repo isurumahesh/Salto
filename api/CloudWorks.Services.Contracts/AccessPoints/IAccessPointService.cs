@@ -1,6 +1,7 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
 
 namespace CloudWorks.Services.Contracts.AccessPoints;
+
 public interface IAccessPointService
 {
     Task<AccessPointCommandResult<OpenAccessPointCommand>> OpenAccessPoint(OpenAccessPointCommand command, CancellationToken cancellationToken);

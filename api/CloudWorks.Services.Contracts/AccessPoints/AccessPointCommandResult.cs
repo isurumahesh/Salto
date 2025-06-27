@@ -1,4 +1,5 @@
 ﻿namespace CloudWorks.Services.Contracts.AccessPoints;
+
 public class AccessPointCommandResult<T> where T : class
 {
     public T Command { get; set; } = null!;

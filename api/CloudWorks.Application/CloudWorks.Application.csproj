@@ -16,4 +16,8 @@
     <ProjectReference Include="..\CloudWorks.Services.Contracts\CloudWorks.Services.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\Schedules\" />
+  </ItemGroup>
+
 </Project>

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CloudWorks.Data.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
-using CloudWorks.Data.Contracts.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudWorks.Data.EntityConfigurations;
+
 public sealed class BookingConfiguration : IEntityTypeConfiguration<Booking>
 {
     public void Configure(EntityTypeBuilder<Booking> builder)

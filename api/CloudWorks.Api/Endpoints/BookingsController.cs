@@ -7,7 +7,6 @@ using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudWorks.Api.Endpoints;
@@ -32,7 +31,6 @@ public class BookingsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
-
         var serializer = new CalendarSerializer();
 
         List<Schedule> schedules = new List<Schedule>();
@@ -67,9 +65,7 @@ public class BookingsController : ControllerBase
         );
     }
 
-
     [HttpGet]
-   // [Authorize]
     public async Task<IActionResult> GetList()
     {
         var result = await _mediator.Send(new GetBookingsQuery());
@@ -77,7 +73,6 @@ public class BookingsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-   // [Authorize(Policy = "UseAccess")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _mediator.Send(new DeleteBookingCommand(id));

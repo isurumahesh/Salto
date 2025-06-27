@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CloudWorks.Data.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
-using CloudWorks.Data.Contracts.Entities;
-
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudWorks.Data.EntityConfigurations;
+
 public sealed class AccessPointConfiguration : IEntityTypeConfiguration<AccessPoint>
 {
     public void Configure(EntityTypeBuilder<AccessPoint> builder)
@@ -11,7 +11,7 @@ public sealed class AccessPointConfiguration : IEntityTypeConfiguration<AccessPo
         builder.ToTable("access_points");
 
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Id).HasColumnName("id");
 
         builder.Property(x => x.Name).HasColumnName("name");

@@ -1,10 +1,5 @@
 ﻿using CloudWorks.Services.Contracts.Bookings;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.Bookings
 {
@@ -20,7 +15,7 @@ namespace CloudWorks.Application.Commands.Bookings
         public async Task Handle(DeleteBookingCommand request, CancellationToken cancellationToken)
         {
             await _repository.DeleteAsync(request.Id);
-            await _repository.SaveChangesAsync(cancellationToken);         
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

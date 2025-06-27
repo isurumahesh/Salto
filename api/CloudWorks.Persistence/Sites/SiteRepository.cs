@@ -1,12 +1,8 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
+using CloudWorks.Data.Contracts.Models;
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.Sites;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Persistence.Sites
 {
@@ -22,8 +18,31 @@ namespace CloudWorks.Persistence.Sites
         public async Task<Site?> GetByIdAsync(Guid id) =>
             await _context.Sites.FindAsync(id);
 
-        public Task<List<Site>> GetSites(CancellationToken cancellationToken) =>
-            _context.Sites.ToListAsync(cancellationToken);
+        public async Task<PagedResult<Site>> GetSitesAsync(int pageNumber, int pageSize, string? nameFilter, CancellationToken cancellationToken)
+        {
+            var query = _context.Sites.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(nameFilter))
+            {
+                query = query.Where(s => s.Name.Contains(nameFilter));
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderBy(s => s.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PagedResult<Site>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
 
         public async Task AddAsync(Site site) =>
             await _context.Sites.AddAsync(site);

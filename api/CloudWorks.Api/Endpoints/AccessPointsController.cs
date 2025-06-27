@@ -6,11 +6,13 @@ using CloudWorks.Services.Contracts.AccessPoints;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CloudWorks.Api.Endpoints;
 
 [ApiController]
 [Route("sites/{siteId:guid}/accessPoints")]
+[Authorize]
 public class AccessPointsController : ControllerBase
 {
     private readonly IAccessPointService _accessPointService;
@@ -35,6 +37,8 @@ public class AccessPointsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
         return _accessPointService.OpenAccessPoint(
             new OpenAccessPointCommand() { AccessPointId = accessPointId, ProfileId = request.ProfileId },
             cancellationToken
@@ -42,7 +46,6 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpPost]
-    //  [Authorize(Policy = "ManageAccess")]
     public async Task<IActionResult> Add([FromBody] AddAccessPointDTO dto)
     {
         var result = await _mediator.Send(new AddAccessPointCommand(dto));
@@ -50,7 +53,6 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    // [Authorize(Policy = "ManageAccess")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAccessPointDTO dto)
     {
         if (id != dto.Id)
@@ -63,7 +65,6 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    //  [Authorize(Policy = "ManageAccess")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _mediator.Send(new DeleteAccessPointCommand(id));

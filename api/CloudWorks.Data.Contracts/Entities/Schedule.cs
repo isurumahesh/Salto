@@ -1,4 +1,5 @@
 ﻿namespace CloudWorks.Data.Contracts.Entities;
+
 public sealed class Schedule
 {
     public Guid Id { get; set; }

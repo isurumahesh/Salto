@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace CloudWorks.Data.Migrations;
+
 public class DbContextFactory : IDesignTimeDbContextFactory<CloudWorksDbContext>
 {
     private static readonly IConfigurationRoot Configuration = new ConfigurationBuilder()

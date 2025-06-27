@@ -1,5 +1,6 @@
 ﻿using CloudWorks.Application.Commands.Sites;
 using CloudWorks.Application.DTOs.Sites;
+using CloudWorks.Application.Queries.Sites;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +22,20 @@ public class SitesController : ControllerBase
     }
 
     [HttpGet]
-    public Task<List<Site>> Get(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get([FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 50,
+        [FromQuery] string? nameFilter = null,
+        CancellationToken cancellationToken = default)
     {
-        return _siteService.GetSites(cancellationToken);
+        var query = new GetSitesQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            NameFilter = nameFilter
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -49,7 +61,7 @@ public class SitesController : ControllerBase
     [HttpDelete("{id}")]
     [Authorize(Policy = "ManageAccess")]
     public async Task<IActionResult> DeleteSite(Guid id)
-    {   
+    {
         await _mediator.Send(new DeleteSiteCommand(id));
         return NoContent();
     }

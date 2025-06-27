@@ -1,12 +1,6 @@
-﻿using AutoMapper;
-using CloudWorks.Application.DTOs.AccessPoints;
+﻿using CloudWorks.Application.DTOs.AccessPoints;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Data.Contracts.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application
 {
@@ -18,6 +12,8 @@ namespace CloudWorks.Application
             CreateMap<UpdateSiteDTO, Site>();
             CreateMap<UpdateAccessPointDTO, AccessPoint>();
             CreateMap<AddAccessPointDTO, AccessPoint>();
+            CreateMap<AccessPoint, AccessPointDTO>();
+            CreateMap<Site, SiteDTO>();
         }
     }
 }

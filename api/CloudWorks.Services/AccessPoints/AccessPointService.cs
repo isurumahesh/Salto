@@ -4,6 +4,7 @@ using CloudWorks.Services.Contracts.AccessPoints;
 using Microsoft.EntityFrameworkCore;
 
 namespace CloudWorks.Services.AccessPoints;
+
 public class AccessPointService : IAccessPointService
 {
     private readonly CloudWorksDbContext _cloudWorksDbContext;

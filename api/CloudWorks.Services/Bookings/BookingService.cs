@@ -35,7 +35,7 @@ public class BookingService : IBookingService
             Schedules = schedules,
             AccessPoints = accessPointsEntities
         };
-        
+
         await _cloudWorksDbContext.Set<Booking>().AddAsync(
             booking,
             cancellationToken

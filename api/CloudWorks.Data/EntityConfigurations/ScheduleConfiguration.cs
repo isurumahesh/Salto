@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CloudWorks.Data.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
-using CloudWorks.Data.Contracts.Entities;
-
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudWorks.Data.EntityConfigurations;
+
 public sealed class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 {
     public void Configure(EntityTypeBuilder<Schedule> builder)
@@ -11,7 +11,7 @@ public sealed class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
         builder.ToTable("schedules");
 
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Id).HasColumnName("id");
 
         builder.Property(x => x.Value).HasColumnName("value");

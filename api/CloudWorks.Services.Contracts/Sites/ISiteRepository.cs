@@ -1,20 +1,22 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CloudWorks.Data.Contracts.Models;
 
 namespace CloudWorks.Services.Contracts.Sites
 {
     public interface ISiteRepository
     {
         Task<Site?> GetByIdAsync(Guid id);
-        Task<List<Site>> GetSites(CancellationToken cancellationToken);
+
         Task AddAsync(Site site);
+
         Task UpdateAsync(Site site);
+
         Task DeleteAsync(Guid id);
+
         Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId);
+
+        Task<PagedResult<Site>> GetSitesAsync(int pageNumber, int pageSize, string? nameFilter, CancellationToken cancellationToken);
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

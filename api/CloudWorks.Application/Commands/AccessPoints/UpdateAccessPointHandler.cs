@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
 using CloudWorks.Services.Contracts.AccessPoints;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.AccessPoints
 {
@@ -28,7 +22,6 @@ namespace CloudWorks.Application.Commands.AccessPoints
 
             await _repository.UpdateAsync(accessPoint);
             await _repository.SaveChangesAsync(cancellationToken);
-
         }
     }
 }

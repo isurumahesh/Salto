@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CloudWorks.Data.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
-using CloudWorks.Data.Contracts.Entities;
-
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudWorks.Data.EntityConfigurations;
+
 public sealed class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {
     public void Configure(EntityTypeBuilder<Profile> builder)
@@ -11,7 +11,7 @@ public sealed class ProfileConfiguration : IEntityTypeConfiguration<Profile>
         builder.ToTable("profiles");
 
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Id).HasColumnName("id");
 
         builder.Property(x => x.Email).HasColumnName("email");

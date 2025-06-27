@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CloudWorks.Data.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
-using CloudWorks.Data.Contracts.Entities;
-
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudWorks.Data.EntityConfigurations;
+
 public sealed class SiteProfileConfiguration : IEntityTypeConfiguration<SiteProfile>
 {
     public void Configure(EntityTypeBuilder<SiteProfile> builder)
@@ -11,7 +11,7 @@ public sealed class SiteProfileConfiguration : IEntityTypeConfiguration<SiteProf
         builder.ToTable("site_profiles");
 
         builder.HasKey(x => x.Id);
-        
+
         builder.Property(x => x.Id).HasColumnName("id");
 
         builder.Property(x => x.SiteId).HasColumnName("site_id");

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace CloudWorks.Data.Database;
+
 public class CloudWorksDbContext : DbContext
 {
     public CloudWorksDbContext(DbContextOptions<CloudWorksDbContext> options)
@@ -15,7 +16,7 @@ public class CloudWorksDbContext : DbContext
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<SiteProfile> SiteProfiles { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
- 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("public");
