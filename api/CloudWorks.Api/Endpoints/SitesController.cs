@@ -2,6 +2,7 @@
 using CloudWorks.Application.DTOs.Pagination;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Queries.Sites;
+using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.Sites;
 using FluentValidation;
 using FluentValidation.Results;
@@ -44,7 +45,16 @@ public class SitesController : ControllerBase
         return Ok(site);
     }
 
+    [HttpGet("{id}/users")]
+    [ProducesResponseType(typeof(List<Profile>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUsersBySiteId(Guid id, CancellationToken cancellationToken)
+    {
+        var users = await _mediator.Send(new GetUsersInSiteQuery(id), cancellationToken);       
+        return Ok(users);
+    }
+
     [HttpPost]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post(AddSiteDTO addSiteDTO, CancellationToken cancellationToken)

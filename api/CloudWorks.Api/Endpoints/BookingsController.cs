@@ -1,13 +1,8 @@
-﻿using CloudWorks.Api.Endpoints.Requests;
-using CloudWorks.Application.Commands.Bookings;
+﻿using CloudWorks.Application.Commands.Bookings;
 using CloudWorks.Application.DTOs.Bookings;
 using CloudWorks.Application.Queries.Bookings;
-using CloudWorks.Data.Contracts.Entities;
-using CloudWorks.Services.Contracts.Bookings;
-using Ical.Net.CalendarComponents;
-using Ical.Net.DataTypes;
-using Ical.Net.Serialization;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudWorks.Api.Endpoints;
@@ -24,9 +19,11 @@ public class BookingsController : ControllerBase
     }
 
     [HttpPost]
-    public Task<Booking> AddBooking(Guid siteId,AddBookingRequest request,CancellationToken cancellationToken)
+    [Authorize(Policy = "BookingsManagePolicy")]
+    public async Task<IActionResult> AddBooking(Guid siteId, AddBookingRequest request, CancellationToken cancellationToken)
     {
-        return _mediator.Send(new AddBookingCommand(siteId, request), cancellationToken);
+        var result = await _mediator.Send(new AddBookingCommand(siteId, request), cancellationToken);
+        return Ok(result);
     }
 
     [HttpGet]
@@ -37,6 +34,7 @@ public class BookingsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "BookingsManagePolicy")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _mediator.Send(new DeleteBookingCommand(id));

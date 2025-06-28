@@ -2,22 +2,18 @@
 using CloudWorks.Application.Commands.AccessPoints;
 using CloudWorks.Application.DTOs.AccessPoints;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Queries.AccessPoints;
-using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.AccessPoints;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CloudWorks.Api.Endpoints;
 
 [ApiController]
 [Route("sites/{siteId:guid}/accessPoints")]
-//[Authorize]
 public class AccessPointsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -50,6 +46,7 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Add([FromBody] AddAccessPointDTO addAccessPointDTO)
@@ -64,6 +61,7 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,6 +82,7 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)

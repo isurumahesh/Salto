@@ -1,5 +1,4 @@
-﻿using CloudWorks.Data.Database;
-using CloudWorks.Services.AccessPoints;
+﻿using CloudWorks.Services.AccessPoints;
 using CloudWorks.Services.Bookings;
 using CloudWorks.Services.Contracts.AccessPoints;
 using CloudWorks.Services.Contracts.Bookings;
