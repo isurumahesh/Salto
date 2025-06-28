@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CloudWorks.Application.Validators;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CloudWorks.Application
 {
@@ -12,6 +14,7 @@ namespace CloudWorks.Application
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+            services.AddValidatorsFromAssemblyContaining<SiteValidator>();
             return services;
         }
     }

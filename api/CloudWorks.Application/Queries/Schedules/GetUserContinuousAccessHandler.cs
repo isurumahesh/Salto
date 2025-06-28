@@ -1,5 +1,5 @@
-﻿using CloudWorks.Application.DTOs;
-using CloudWorks.Application.DTOs.Schedules;
+﻿using CloudWorks.Application.DTOs.Schedules;
+using CloudWorks.Application.DTOs.TimeSlots;
 using CloudWorks.Services.Contracts.Schedules;
 using MediatR;
 
@@ -20,12 +20,46 @@ namespace CloudWorks.Application.Queries.Schedules
 
             return accessRanges
                 .GroupBy(x => x.AccessPointId)
-                .Select(group => new AccessPointTimeSlotDto
+                .Select(group =>
                 {
-                    AccessPointId = group.Key,
-                    TimeSlots = group.Select(g => new TimeSlotDTO { Start = g.Start, End = g.End }).ToList()
+                    var merged = MergeTimeSlots(
+                        group.Select(g => new TimeSlotDTO { Start = g.Start, End = g.End })
+                             .OrderBy(ts => ts.Start)
+                             .ToList()
+                    );
+                    return new AccessPointTimeSlotDto
+                    {
+                        AccessPointId = group.Key,
+                        TimeSlots = merged
+                    };
                 })
                 .ToList();
+        }
+
+        private List<TimeSlotDTO> MergeTimeSlots(List<TimeSlotDTO> slots)
+        {
+            var merged = new List<TimeSlotDTO>();
+
+            foreach (var slot in slots)
+            {
+                if (!merged.Any())
+                {
+                    merged.Add(new TimeSlotDTO { Start = slot.Start, End = slot.End });
+                }
+                else
+                {
+                    var last = merged.Last();
+                    if (slot.Start <= last.End) // Overlap or adjacent
+                    {
+                        last.End = slot.End > last.End ? slot.End : last.End;
+                    }
+                    else
+                    {
+                        merged.Add(new TimeSlotDTO { Start = slot.Start, End = slot.End });
+                    }
+                }
+            }
+            return merged;
         }
     }
 }

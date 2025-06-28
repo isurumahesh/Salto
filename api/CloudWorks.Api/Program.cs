@@ -2,6 +2,7 @@ using CloudWorks.Api;
 using CloudWorks.Api.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDataAccess(builder.Configuration);
+//builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddAuthentication("Bearer")
@@ -41,7 +42,23 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-builder.Services.AddAppDI();
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }
+        )
+    );
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
+
+builder.Services.AddAppDI(builder.Configuration);
 
 var app = builder.Build();
 
@@ -56,7 +73,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseRateLimiter();
 app.MapControllers();
 
 app.Run();

@@ -53,6 +53,48 @@ namespace CloudWorks.Data.Migrations.Migrations
                     b.ToTable("booking_site_profiles", "public");
                 });
 
+            modelBuilder.Entity("CloudWorks.Data.Contracts.Entities.AccessEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AccessPointId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("access_point_id");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("profile_id");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("reason");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_id");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean")
+                        .HasColumnName("success");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("timestamp");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessPointId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("SiteId");
+
+                    b.ToTable("access_events", "public");
+                });
+
             modelBuilder.Entity("CloudWorks.Data.Contracts.Entities.AccessPoint", b =>
                 {
                     b.Property<Guid>("Id")
@@ -134,9 +176,15 @@ namespace CloudWorks.Data.Migrations.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("booking_id");
 
+                    b.Property<DateTime>("EndUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_id");
+
+                    b.Property<DateTime>("StartUtc")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -221,6 +269,33 @@ namespace CloudWorks.Data.Migrations.Migrations
                         .HasForeignKey("ProfilesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CloudWorks.Data.Contracts.Entities.AccessEvent", b =>
+                {
+                    b.HasOne("CloudWorks.Data.Contracts.Entities.AccessPoint", "AccessPoint")
+                        .WithMany()
+                        .HasForeignKey("AccessPointId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CloudWorks.Data.Contracts.Entities.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Site", "Site")
+                        .WithMany()
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AccessPoint");
+
+                    b.Navigation("Profile");
+
+                    b.Navigation("Site");
                 });
 
             modelBuilder.Entity("CloudWorks.Data.Contracts.Entities.AccessPoint", b =>

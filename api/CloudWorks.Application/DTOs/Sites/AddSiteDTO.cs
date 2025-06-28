@@ -1,7 +1,7 @@
 ﻿namespace CloudWorks.Application.DTOs.Sites
 {
-    public class AddSiteDTO
+    public record AddSiteDTO
     {
-        public string Name { get; set; }
+        public string Name { get; init; }
     }
 }

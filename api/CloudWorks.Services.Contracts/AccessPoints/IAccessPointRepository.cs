@@ -6,7 +6,7 @@ namespace CloudWorks.Services.Contracts.AccessPoints
     {
         Task<AccessPoint?> GetByIdAsync(Guid id);
 
-        Task<IEnumerable<AccessPoint>> GetBySiteIdAsync(Guid siteId);
+        IQueryable<AccessPoint> QueryBySiteId(Guid siteId);
 
         Task AddAsync(AccessPoint accessPoint);
 

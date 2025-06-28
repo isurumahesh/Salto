@@ -1,7 +1,10 @@
 ﻿using CloudWorks.Application.Commands.Sites;
+using CloudWorks.Application.DTOs.Pagination;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Queries.Sites;
 using CloudWorks.Services.Contracts.Sites;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,35 +16,32 @@ namespace CloudWorks.Api.Endpoints;
 public class SitesController : ControllerBase
 {
     private readonly ISiteService _siteService;
+    private readonly IValidator<AddSiteDTO> _validator;
     private readonly IMediator _mediator;
 
-    public SitesController(ISiteService siteService, IMediator mediator)
+    public SitesController(ISiteService siteService, IMediator mediator, IValidator<AddSiteDTO> validator)
     {
         _siteService = siteService;
         _mediator = mediator;
+        _validator = validator;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 50,
-        [FromQuery] string? nameFilter = null,
-        CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Get([FromQuery] PagingFilter pagingFilter, CancellationToken cancellationToken = default)
     {
-        var query = new GetSitesQuery
-        {
-            PageNumber = pageNumber,
-            PageSize = pageSize,
-            NameFilter = nameFilter
-        };
-
-        var result = await _mediator.Send(query, cancellationToken);
+        var result = await _mediator.Send(new GetSitesQuery(pagingFilter), cancellationToken);
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(AddSiteDTO site, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(AddSiteDTO addSiteDTO, CancellationToken cancellationToken)
     {
-        await _mediator.Send(new AddSiteCommand(site));
+        ValidationResult result = await _validator.ValidateAsync(addSiteDTO);
+
+        if (!result.IsValid)
+            return BadRequest(result.Errors);
+
+        await _mediator.Send(new AddSiteCommand(addSiteDTO));
         return Ok();
     }
 

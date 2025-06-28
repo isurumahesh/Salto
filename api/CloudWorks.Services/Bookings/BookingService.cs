@@ -17,7 +17,7 @@ public class BookingService : IBookingService
     public async Task<Booking> AddBooking(
         Guid siteId,
         string name,
-        List<string> userEmails,
+        List<Guid> siteProfiles,
         List<Guid> accessPoints,
         List<Schedule> schedules,
         CancellationToken cancellationToken
@@ -27,11 +27,16 @@ public class BookingService : IBookingService
             .Where(x => x.SiteId == siteId && accessPoints!.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
+        var siteProfilesEntities = await _cloudWorksDbContext.Set<SiteProfile>()
+            .Where(x => x.SiteId == siteId && siteProfiles!.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
         var booking = new Booking()
         {
             Id = Guid.NewGuid(),
             Name = name,
-            SiteId = siteId,
+            SiteId = siteId, 
+            Profiles = siteProfilesEntities,
             Schedules = schedules,
             AccessPoints = accessPointsEntities
         };
@@ -43,28 +48,28 @@ public class BookingService : IBookingService
 
         await _cloudWorksDbContext.SaveChangesAsync(cancellationToken);
 
-        foreach (var email in userEmails)
-        {
-            var siteProfile = new SiteProfile()
-            {
-                Id = Guid.NewGuid(),
-                SiteId = siteId,
-                Profile = new Profile()
-                {
-                    Id = Guid.NewGuid(),
-                    Email = email
-                }
-            };
+        //foreach (var email in userEmails)
+        //{
+        //    var siteProfile = new SiteProfile()
+        //    {
+        //        Id = Guid.NewGuid(),
+        //        SiteId = siteId,
+        //        Profile = new Profile()
+        //        {
+        //            Id = Guid.NewGuid(),
+        //            Email = email
+        //        }
+        //    };
 
-            await _cloudWorksDbContext.Set<SiteProfile>().AddAsync(
-                siteProfile,
-                cancellationToken
-            );
+        //    await _cloudWorksDbContext.Set<SiteProfile>().AddAsync(
+        //        siteProfile,
+        //        cancellationToken
+        //    );
 
-            booking.Profiles.Add(siteProfile);
+        //    booking.Profiles.Add(siteProfile);
 
-            await _cloudWorksDbContext.SaveChangesAsync(cancellationToken);
-        }
+        //    await _cloudWorksDbContext.SaveChangesAsync(cancellationToken);
+        //}
 
         return booking;
     }

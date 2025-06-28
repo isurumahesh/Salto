@@ -15,7 +15,7 @@ namespace CloudWorks.Services.Contracts.Sites
 
         Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId);
 
-        Task<PagedResult<Site>> GetSitesAsync(int pageNumber, int pageSize, string? nameFilter, CancellationToken cancellationToken);
+        IQueryable<Site> Query();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

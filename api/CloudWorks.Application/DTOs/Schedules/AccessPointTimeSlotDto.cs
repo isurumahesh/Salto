@@ -1,4 +1,6 @@
-﻿namespace CloudWorks.Application.DTOs.Schedules
+﻿using CloudWorks.Application.DTOs.TimeSlots;
+
+namespace CloudWorks.Application.DTOs.Schedules
 {
     public class AccessPointTimeSlotDto
     {

@@ -1,4 +1,5 @@
-﻿using CloudWorks.Data.Database;
+﻿using CloudWorks.Data.Contracts.Models;
+using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.Schedules;
 using Ical.Net.Serialization;
 using Microsoft.EntityFrameworkCore;
@@ -15,75 +16,74 @@ namespace CloudWorks.Persistence.Schedules
             _context = context;
         }
 
-        private (DateTime Start, DateTime End) ParseScheduleValue(string icalValue)
-        {
-            if (string.IsNullOrWhiteSpace(icalValue))
-                throw new ArgumentException("iCal data must not be null or empty.", nameof(icalValue));
-
-            try
-            {
-                var calendar = Ical.Net.Calendar.Load(icalValue); // ✅ Correct for Ical.Net 5.x and newer
-
-                var calendarEvent = calendar.Events.FirstOrDefault()
-                    ?? throw new InvalidOperationException("No calendar event found");
-
-                var start = calendarEvent.Start.Value.ToLocalTime();
-                var end = calendarEvent.End.Value.ToLocalTime();
-
-                return (start, end);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"Failed to parse iCal: {ex.Message}", ex);
-            }
-        }
-
-        public async Task<List<(Guid AccessPointId, DateTime Start, DateTime End)>> GetOccupiedSlotsByAccessPointAsync(List<Guid> accessPointIds, DateTime start, DateTime end, CancellationToken cancellationToken)
+        public async Task<List<OccupiedSlotDto>> GetOccupiedSlotsByAccessPointAsync(List<Guid> accessPointIds, DateTime start, DateTime end, CancellationToken cancellationToken)
         {
             var schedules = await _context.Schedules
-                .Where(s => s.Booking.AccessPoints.Any(ap => accessPointIds.Contains(ap.Id)))
-                .Select(s => new { s.Value, s.Booking.AccessPoints })
+                .Where(s =>
+                    s.StartUtc < end &&
+                    s.EndUtc > start &&
+                    s.Booking.AccessPoints.Any(ap => accessPointIds.Contains(ap.Id)))
+                .Include(s => s.Booking.AccessPoints)
                 .ToListAsync(cancellationToken);
 
-            var result = new List<(Guid, DateTime, DateTime)>();
-
-            foreach (var item in schedules)
+            var result = new List<OccupiedSlotDto>();
+            foreach (var schedule in schedules)
             {
-                var (parsedStart, parsedEnd) = ParseScheduleValue(item.Value);
-                if (parsedEnd < start || parsedStart > end)
-                    continue;
-
-                foreach (var ap in item.AccessPoints.Where(ap => accessPointIds.Contains(ap.Id)))
+                foreach (var ap in schedule.Booking.AccessPoints)
                 {
-                    result.Add((ap.Id, parsedStart, parsedEnd));
+                    if (accessPointIds.Contains(ap.Id))
+                    {
+                        result.Add(new OccupiedSlotDto
+                        {
+                            AccessPointId = ap.Id,
+                            Start = schedule.StartUtc,
+                            End = schedule.EndUtc
+                        });
+                    }
                 }
             }
-
             return result;
         }
 
-        public async Task<List<(Guid AccessPointId, DateTime Start, DateTime End)>> GetUserAccessRangesAsync(Guid userId, List<Guid> accessPointIds, DateTime start, DateTime end, CancellationToken cancellationToken)
+        public async Task<List<OccupiedSlotDto>> GetUserAccessRangesAsync(
+            Guid userId,
+            List<Guid> accessPointIds,
+            DateTime start,
+            DateTime end,
+            CancellationToken cancellationToken)
         {
-            var raw = await _context.Schedules
-                .Where(s => s.Booking.Profiles.Any(p => p.Id == userId) &&
-                            s.Booking.AccessPoints.Any(ap => accessPointIds.Contains(ap.Id)))
-                .Select(s => new { s.Value, s.Booking.AccessPoints })
+            var schedules = await _context.Schedules
+                .Where(s =>
+                    s.StartUtc < end &&
+                    s.EndUtc > start &&
+                    s.Booking.Profiles.Any(p => p.Id == userId) &&
+                    s.Booking.AccessPoints.Any(ap => accessPointIds.Contains(ap.Id)))
+                .Include(s => s.Booking.AccessPoints)
                 .ToListAsync(cancellationToken);
 
-            var result = new List<(Guid, DateTime, DateTime)>();
-
-            foreach (var item in raw)
+            var result = new List<OccupiedSlotDto>();
+            foreach (var schedule in schedules)
             {
-                var (parsedStart, parsedEnd) = ParseScheduleValue(item.Value);
-                if (parsedEnd < start || parsedStart > end)
-                    continue;
-
-                foreach (var ap in item.AccessPoints.Where(ap => accessPointIds.Contains(ap.Id)))
+                foreach (var ap in schedule.Booking.AccessPoints)
                 {
-                    result.Add((ap.Id, parsedStart, parsedEnd));
+                    if (accessPointIds.Contains(ap.Id))
+                    {
+                        // Clip to query window
+                        var actualStart = schedule.StartUtc > start ? schedule.StartUtc : start;
+                        var actualEnd = schedule.EndUtc < end ? schedule.EndUtc : end;
+
+                        if (actualEnd > actualStart) // Only add non-empty intervals
+                        {
+                            result.Add(new OccupiedSlotDto
+                            {
+                                AccessPointId = ap.Id,
+                                Start = actualStart,
+                                End = actualEnd
+                            });
+                        }
+                    }
                 }
             }
-
             return result;
         }
     }

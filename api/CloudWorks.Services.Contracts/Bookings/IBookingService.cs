@@ -7,7 +7,7 @@ public interface IBookingService
     Task<Booking> AddBooking(
         Guid siteId,
         string name,
-        List<string> userEmails,
+        List<Guid> siteProfiles,
         List<Guid> accessPoints,
         List<Schedule> schedules,
         CancellationToken cancellationToken

@@ -12,7 +12,7 @@ namespace CloudWorks.Services.Contracts.Bookings
 
         Task DeleteAsync(Guid id);
 
-        Task<bool> HasValidBookingAsync(string userEmail, Guid accessPointId, Guid siteId, DateTime now, CancellationToken cancellationToken);
+        Task<bool> HasValidBookingAsync(Guid profileId, Guid accessPointId, Guid siteId, DateTime now, CancellationToken cancellationToken);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

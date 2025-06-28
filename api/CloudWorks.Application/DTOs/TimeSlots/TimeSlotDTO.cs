@@ -1,4 +1,4 @@
-﻿namespace CloudWorks.Application.DTOs
+﻿namespace CloudWorks.Application.DTOs.TimeSlots
 {
     public class TimeSlotDTO
     {

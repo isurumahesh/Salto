@@ -1,5 +1,6 @@
 ﻿using CloudWorks.Api.Endpoints.Requests;
 using CloudWorks.Application.Commands.Bookings;
+using CloudWorks.Application.DTOs.Bookings;
 using CloudWorks.Application.Queries.Bookings;
 using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.Bookings;
@@ -31,38 +32,7 @@ public class BookingsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        var serializer = new CalendarSerializer();
-
-        List<Schedule> schedules = new List<Schedule>();
-
-        foreach (var s in request.Schedules)
-        {
-            var e = new CalendarEvent
-            {
-                Start = new CalDateTime(s.Start),
-                End = new CalDateTime(s.End)
-            };
-
-            var calendar = new Ical.Net.Calendar();
-
-            calendar.Events.Add(e);
-
-            schedules.Add(new Schedule()
-            {
-                Id = Guid.NewGuid(),
-                SiteId = siteId,
-                Value = serializer.SerializeToString(calendar!)!
-            });
-        }
-
-        return _bookingService.AddBooking(
-            siteId,
-            request.Name,
-            request.Users,
-            request.AccessPoints,
-            schedules,
-            cancellationToken
-        );
+        return _mediator.Send(new AddBookingCommand(siteId, request), cancellationToken);
     }
 
     [HttpGet]

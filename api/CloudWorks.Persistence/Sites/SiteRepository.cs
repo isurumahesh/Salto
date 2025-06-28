@@ -18,31 +18,7 @@ namespace CloudWorks.Persistence.Sites
         public async Task<Site?> GetByIdAsync(Guid id) =>
             await _context.Sites.FindAsync(id);
 
-        public async Task<PagedResult<Site>> GetSitesAsync(int pageNumber, int pageSize, string? nameFilter, CancellationToken cancellationToken)
-        {
-            var query = _context.Sites.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(nameFilter))
-            {
-                query = query.Where(s => s.Name.Contains(nameFilter));
-            }
-
-            var totalCount = await query.CountAsync(cancellationToken);
-
-            var items = await query
-                .OrderBy(s => s.Name)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken);
-
-            return new PagedResult<Site>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            };
-        }
+        public IQueryable<Site> Query() => _context.Sites.AsQueryable();
 
         public async Task AddAsync(Site site) =>
             await _context.Sites.AddAsync(site);

@@ -1,4 +1,6 @@
 ﻿using CloudWorks.Application.DTOs.AccessPoints;
+using CloudWorks.Application.DTOs.Profiles;
+using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Data.Contracts.Entities;
 
@@ -14,6 +16,8 @@ namespace CloudWorks.Application
             CreateMap<AddAccessPointDTO, AccessPoint>();
             CreateMap<AccessPoint, AccessPointDTO>();
             CreateMap<Site, SiteDTO>();
+            CreateMap<AddProfileDTO, Profile>();
+            CreateMap<AddSiteProfileDTO, SiteProfile>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CloudWorks.Application.Queries.Schedules;
+﻿using CloudWorks.Application.DTOs.TimeSlots;
+using CloudWorks.Application.Queries.Schedules;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,25 +16,18 @@ namespace CloudWorks.Api.Endpoints
             _mediator = mediator;
         }
 
-        [HttpGet("free")]
-        public async Task<IActionResult> GetFreeTimeSlots(
-            [FromQuery] List<Guid> accessPointIds,
-            [FromQuery] DateTime start,
-            [FromQuery] DateTime end)
+        [HttpPost("free")]
+        public async Task<IActionResult> GetFreeTimeSlots([FromBody] GetFreeTimeSlotsRequestDTO request)
         {
-            var query = new GetFreeTimeSlotsQuery(accessPointIds, start, end);
+            var query = new GetFreeTimeSlotsQuery(request.AccessPointIds, request.Start, request.End);
             var result = await _mediator.Send(query);
             return Ok(result);
         }
 
         [HttpGet("continuous-access")]
-        public async Task<IActionResult> GetUserContinuousAccess(
-            [FromQuery] Guid userId,
-            [FromQuery] List<Guid> accessPointIds,
-            [FromQuery] DateTime start,
-            [FromQuery] DateTime end)
+        public async Task<IActionResult> GetUserContinuousAccess([FromBody] GetContinuousTimeSlotsRequestDTO request)
         {
-            var query = new GetUserContinuousAccessQuery(userId, accessPointIds, start, end);
+            var query = new GetUserContinuousAccessQuery(request.UserId, request.AccessPointIds, request.Start, request.End);
             var result = await _mediator.Send(query);
             return Ok(result);
         }

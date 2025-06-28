@@ -16,6 +16,7 @@ public class CloudWorksDbContext : DbContext
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<SiteProfile> SiteProfiles { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<AccessEvent> AccessEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

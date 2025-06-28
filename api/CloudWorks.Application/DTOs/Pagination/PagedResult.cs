@@ -1,4 +1,4 @@
-﻿namespace CloudWorks.Data.Contracts.Models
+﻿namespace CloudWorks.Application.DTOs.Pagination
 {
     public class PagedResult<T>
     {

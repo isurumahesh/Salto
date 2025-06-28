@@ -37,29 +37,20 @@ namespace CloudWorks.Persistence.Bookings
                 _context.Bookings.Remove(booking);
         }
 
-        public async Task<bool> HasValidBookingAsync(string userEmail, Guid accessPointId, Guid siteId, DateTime now, CancellationToken cancellationToken)
+        public async Task<bool> HasValidBookingAsync(
+     Guid profileId, Guid accessPointId, Guid siteId, DateTime nowUtc, CancellationToken cancellationToken)
         {
-            var bookings = await _context.Bookings
-            .Include(b => b.Schedules)
-            .Include(b => b.AccessPoints)
-            .Include(b => b.Profiles)
-                .ThenInclude(sp => sp.Profile)
-            .Where(b =>
-                b.SiteId == siteId &&
-                b.AccessPoints.Any(ap => ap.Id == accessPointId) &&
-                b.Profiles.Any(p => p.Profile.Email == userEmail))
-            .ToListAsync(cancellationToken);
-
-            foreach (var booking in bookings)
-            {
-                foreach (var schedule in booking.Schedules)
-                {
-                    if (IsNowInSchedule(schedule.Value, now))
-                        return true;
-                }
-            }
-
-            return false;
+            return await _context.Bookings
+                .Include(b => b.Schedules)
+                .Include(b => b.AccessPoints)
+                .Include(b => b.Profiles)
+                    .ThenInclude(sp => sp.Profile)
+                .AnyAsync(b =>
+                    b.SiteId == siteId &&
+                    b.AccessPoints.Any(ap => ap.Id == accessPointId) &&
+                    b.Profiles.Any(p => p.Profile.Id == profileId) &&
+                    b.Schedules.Any(s => s.StartUtc <= nowUtc && s.EndUtc >= nowUtc),
+                    cancellationToken);
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>

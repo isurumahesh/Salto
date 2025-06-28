@@ -1,5 +1,5 @@
-﻿using CloudWorks.Application.DTOs;
-using CloudWorks.Application.DTOs.Schedules;
+﻿using CloudWorks.Application.DTOs.Schedules;
+using CloudWorks.Application.DTOs.TimeSlots;
 using CloudWorks.Services.Contracts.Schedules;
 using MediatR;
 

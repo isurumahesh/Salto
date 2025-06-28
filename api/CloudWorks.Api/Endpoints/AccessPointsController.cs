@@ -1,18 +1,21 @@
 ﻿using CloudWorks.Api.Endpoints.Requests;
 using CloudWorks.Application.Commands.AccessPoints;
 using CloudWorks.Application.DTOs.AccessPoints;
+using CloudWorks.Application.DTOs.Pagination;
+using CloudWorks.Application.Queries.AccessPoints;
 using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.AccessPoints;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace CloudWorks.Api.Endpoints;
 
 [ApiController]
 [Route("sites/{siteId:guid}/accessPoints")]
-[Authorize]
+//[Authorize]
 public class AccessPointsController : ControllerBase
 {
     private readonly IAccessPointService _accessPointService;
@@ -25,24 +28,19 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpGet]
-    public Task<List<AccessPoint>> Get(Guid siteId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(Guid siteId, [FromQuery] PagingFilter filter, CancellationToken cancellationToken)
     {
-        return _accessPointService.GetAccessPoints(siteId, cancellationToken);
+        var result = await _mediator.Send(new GetAccessPointsQuery(siteId, filter), cancellationToken);
+        return Ok(result);
     }
 
     [HttpPost("{accessPointId:guid}/open")]
-    public Task<AccessPointCommandResult<OpenAccessPointCommand>> Open(
-        [FromRoute] Guid accessPointId,
-        [FromBody] OpenAccessPointRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<IActionResult> Open([FromRoute] Guid siteId, [FromRoute] Guid accessPointId, [FromBody] OpenAccessPointRequest request, CancellationToken cancellationToken)
     {
-        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var result = await _mediator.Send(new AttemptAccessPointCommand(
+        new OpenAccessPointCommand() { AccessPointId = accessPointId, ProfileId = request.ProfileId }, siteId, DateTime.UtcNow), cancellationToken);
 
-        return _accessPointService.OpenAccessPoint(
-            new OpenAccessPointCommand() { AccessPointId = accessPointId, ProfileId = request.ProfileId },
-            cancellationToken
-        );
+        return Ok(result);
     }
 
     [HttpPost]
