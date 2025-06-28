@@ -15,7 +15,7 @@ namespace CloudWorks.Application
             CreateMap<UpdateAccessPointDTO, AccessPoint>();
             CreateMap<AddAccessPointDTO, AccessPoint>();
             CreateMap<AccessPoint, AccessPointDTO>();
-            CreateMap<Site, SiteDTO>();
+            CreateMap<Site, SiteDTO>().ReverseMap();
             CreateMap<AddProfileDTO, Profile>();
             CreateMap<AddSiteProfileDTO, SiteProfile>();
         }

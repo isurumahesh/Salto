@@ -15,51 +15,74 @@ namespace CloudWorks.Api.Endpoints;
 [Route("sites")]
 public class SitesController : ControllerBase
 {
-    private readonly ISiteService _siteService;
-    private readonly IValidator<AddSiteDTO> _validator;
+    private readonly IValidator<AddSiteDTO> _addValidator;
+    private readonly IValidator<UpdateSiteDTO> _updateValidator;
     private readonly IMediator _mediator;
 
-    public SitesController(ISiteService siteService, IMediator mediator, IValidator<AddSiteDTO> validator)
+    public SitesController(IMediator mediator, IValidator<AddSiteDTO> addValidator, IValidator<UpdateSiteDTO> updateValidator)
     {
-        _siteService = siteService;
         _mediator = mediator;
-        _validator = validator;
+        _addValidator = addValidator;
+        _updateValidator = updateValidator;
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<SiteDTO>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromQuery] PagingFilter pagingFilter, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(new GetSitesQuery(pagingFilter), cancellationToken);
         return Ok(result);
     }
 
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(SiteDTO), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetSiteById(Guid id, CancellationToken cancellationToken)
+    {
+        var site = await _mediator.Send(new GetSiteByIdQuery(id), cancellationToken);
+        if (site == null)
+            return NotFound();
+        return Ok(site);
+    }
+
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post(AddSiteDTO addSiteDTO, CancellationToken cancellationToken)
     {
-        ValidationResult result = await _validator.ValidateAsync(addSiteDTO);
+        ValidationResult result = await _addValidator.ValidateAsync(addSiteDTO);
 
         if (!result.IsValid)
             return BadRequest(result.Errors);
 
-        await _mediator.Send(new AddSiteCommand(addSiteDTO));
-        return Ok();
+        var createdSite = await _mediator.Send(new AddSiteCommand(addSiteDTO));
+        return CreatedAtAction(nameof(GetSiteById), new { id = createdSite.Id }, createdSite);
     }
 
     [HttpPut("{id}")]
     [Authorize(Policy = "ManageAccess")]
-    public async Task<IActionResult> UpdateSite(Guid id, [FromBody] UpdateSiteDTO dto)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSite(Guid id, [FromBody] UpdateSiteDTO updateSiteDTO)
     {
-        if (id != dto.Id)
+        if (id != updateSiteDTO.Id)
         {
             return BadRequest();
         }
 
-        await _mediator.Send(new UpdateSiteCommand(dto));
+        ValidationResult result = await _updateValidator.ValidateAsync(updateSiteDTO);
+
+        if (!result.IsValid)
+            return BadRequest(result.Errors);
+
+        await _mediator.Send(new UpdateSiteCommand(updateSiteDTO));
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     [Authorize(Policy = "ManageAccess")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSite(Guid id)
     {
         await _mediator.Send(new DeleteSiteCommand(id));

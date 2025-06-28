@@ -1,4 +1,5 @@
-﻿using CloudWorks.Services.Contracts.AccessPoints;
+﻿using CloudWorks.Application.Exceptions;
+using CloudWorks.Services.Contracts.AccessPoints;
 using MediatR;
 
 namespace CloudWorks.Application.Commands.AccessPoints
@@ -14,8 +15,13 @@ namespace CloudWorks.Application.Commands.AccessPoints
 
         public async Task Handle(DeleteAccessPointCommand request, CancellationToken cancellationToken)
         {
-            await _repository.DeleteAsync(request.Id);
-            await _repository.SaveChangesAsync(cancellationToken);
+            var accessPoint = await _repository.GetByIdAsync(request.Id);
+            if (accessPoint is null)
+            {
+                throw new NotFoundException($"Access Point with ID {request.Id} not found.");
+            }
+
+            await _repository.DeleteAsync(accessPoint);
         }
     }
 }

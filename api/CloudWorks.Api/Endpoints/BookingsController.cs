@@ -16,21 +16,15 @@ namespace CloudWorks.Api.Endpoints;
 [Route("sites/{siteId:guid}/bookings")]
 public class BookingsController : ControllerBase
 {
-    private readonly IBookingService _bookingService;
     private readonly IMediator _mediator;
 
-    public BookingsController(IBookingService bookingService, IMediator mediator)
+    public BookingsController(IMediator mediator)
     {
-        _bookingService = bookingService;
         _mediator = mediator;
     }
 
     [HttpPost]
-    public Task<Booking> AddBooking(
-        Guid siteId,
-        AddBookingRequest request,
-        CancellationToken cancellationToken
-    )
+    public Task<Booking> AddBooking(Guid siteId,AddBookingRequest request,CancellationToken cancellationToken)
     {
         return _mediator.Send(new AddBookingCommand(siteId, request), cancellationToken);
     }

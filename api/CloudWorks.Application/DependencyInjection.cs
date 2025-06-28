@@ -14,7 +14,7 @@ namespace CloudWorks.Application
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            services.AddValidatorsFromAssemblyContaining<SiteValidator>();
+            services.AddValidatorsFromAssemblyContaining<AddSiteValidator>();
             return services;
         }
     }

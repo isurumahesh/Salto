@@ -1,7 +1,12 @@
-﻿using CloudWorks.Application.DTOs.Sites;
+﻿using CloudWorks.Application.Cache;
+using CloudWorks.Application.DTOs.Sites;
 using MediatR;
 
 namespace CloudWorks.Application.Commands.Sites
 {
-    public record AddSiteCommand(AddSiteDTO AddSiteDTO) : IRequest<Guid>;
+    public record AddSiteCommand(AddSiteDTO AddSiteDTO) : IRequest<SiteDTO>, ICacheInvalidator
+    {
+        public IEnumerable<string> CachePatternsToInvalidate
+            => new[] { "sites:" };
+    }
 }

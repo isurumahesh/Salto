@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Validators
 {
-    public class SiteValidator : AbstractValidator<AddSiteDTO>
+    public class UpdateSiteValidator : AbstractValidator<UpdateSiteDTO>
     {
-        public SiteValidator()
+        public UpdateSiteValidator()
         {
             RuleFor(x => x.Name).NotEmpty().MaximumLength(10);
         }

@@ -11,12 +11,11 @@ namespace CloudWorks.Services.Contracts.Sites
 
         Task UpdateAsync(Site site);
 
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(Site site);
 
         Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId);
 
         IQueryable<Site> Query();
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

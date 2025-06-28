@@ -3,6 +3,7 @@ using CloudWorks.Services.Contracts.AccessEvents;
 using CloudWorks.Services.Contracts.AccessPoints;
 using CloudWorks.Services.Contracts.Bookings;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,17 +16,20 @@ namespace CloudWorks.Application.Commands.AccessPoints
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IAccessEventRepository _accessEventRepository;
+        private readonly ILogger<AttemptAccessPointHandler> _logger;
 
-        public AttemptAccessPointHandler(IBookingRepository bookingRepository, IAccessEventRepository accessEventRepository)
+        public AttemptAccessPointHandler(IBookingRepository bookingRepository, IAccessEventRepository accessEventRepository, ILogger<AttemptAccessPointHandler> logger)
         {
             _bookingRepository = bookingRepository;
             _accessEventRepository = accessEventRepository;
+            _logger = logger;
         }
 
         public async Task<AccessPointCommandResult<OpenAccessPointCommand>> Handle(
             AttemptAccessPointCommand command,
             CancellationToken cancellationToken)
         {
+
             var errorMessage = string.Empty;
             bool hasValidBooking = false;
             try
@@ -40,8 +44,9 @@ namespace CloudWorks.Application.Commands.AccessPoints
             }
             catch (Exception ex)
             {
-
                 errorMessage = ex.Message;
+                this._logger.LogError(ex, "Error checking booking for access point {AccessPointId} at site {SiteId}", 
+                    command.OpenAccessPointCommand.AccessPointId, command.SiteId);
             }
 
             await _accessEventRepository.AddAsync(new AccessEvent

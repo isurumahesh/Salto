@@ -1,4 +1,5 @@
-﻿using CloudWorks.Services.Contracts.Sites;
+﻿using CloudWorks.Application.Exceptions;
+using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 
 namespace CloudWorks.Application.Commands.Sites
@@ -14,8 +15,13 @@ namespace CloudWorks.Application.Commands.Sites
 
         public async Task Handle(DeleteSiteCommand request, CancellationToken cancellationToken)
         {
-            await _repository.DeleteAsync(request.Id);
-            await _repository.SaveChangesAsync(cancellationToken);
+            var existingSite = await _repository.GetByIdAsync(request.Id);
+            if (existingSite == null)
+            {
+                throw new NotFoundException($"Site with ID {request.Id} not found.");
+            }
+
+            await _repository.DeleteAsync(existingSite);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CloudWorks.Application.Constants;
 using CloudWorks.Application.DTOs.Pagination;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Data.Contracts.Models;
@@ -51,7 +52,7 @@ namespace CloudWorks.Application.Queries.Sites
                 PageSize = filter.PageSize
             };
 
-            _cacheService.Set(cacheKey, result, TimeSpan.FromMinutes(1));
+            _cacheService.Set(cacheKey, result, TimeSpan.FromMinutes(CacheConstants.CacheDurationInMinutes));
 
             return result;
         }

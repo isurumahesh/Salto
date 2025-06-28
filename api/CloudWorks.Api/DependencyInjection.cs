@@ -6,10 +6,10 @@ namespace CloudWorks.Api
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddAppDI(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAppDI(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
             services.AddApplicationDI();
-            services.AddPersistenceDI(configuration);
+            services.AddPersistenceDI(configuration, environment);
             services.AddInfrastructureDI(configuration);
             return services;
         }

@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudWorks.Persistence", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudWorks.Infrastructure", "..\CloudWorks.Infrastructure\CloudWorks.Infrastructure.csproj", "{5711151D-9F3B-43EF-90B2-E52CA5B90D74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudWorks.IntegrationTests", "..\CloudWorks.IntegrationTests\CloudWorks.IntegrationTests.csproj", "{E697BC2D-A47F-4EAA-8ED5-B510342BF9F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BCE3C73E-7836-4DE3-8F22-2E27C2C9EFDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +77,10 @@ Global
 		{5711151D-9F3B-43EF-90B2-E52CA5B90D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5711151D-9F3B-43EF-90B2-E52CA5B90D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5711151D-9F3B-43EF-90B2-E52CA5B90D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E697BC2D-A47F-4EAA-8ED5-B510342BF9F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E697BC2D-A47F-4EAA-8ED5-B510342BF9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E697BC2D-A47F-4EAA-8ED5-B510342BF9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E697BC2D-A47F-4EAA-8ED5-B510342BF9F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +95,7 @@ Global
 		{7D88FD80-9F04-4DF0-875B-F7691AE97CFC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{ADFCD4C1-A6E5-486E-9205-4983207BB160} = {C0FF2DEF-A3D8-43F7-94BD-53AC8210F6D8}
 		{5711151D-9F3B-43EF-90B2-E52CA5B90D74} = {C0FF2DEF-A3D8-43F7-94BD-53AC8210F6D8}
+		{E697BC2D-A47F-4EAA-8ED5-B510342BF9F2} = {BCE3C73E-7836-4DE3-8F22-2E27C2C9EFDC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {537C4E31-871E-4287-B585-0122F02771DC}

@@ -16,18 +16,21 @@ using CloudWorks.Services.Contracts.Sites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Npgsql;
 
 namespace CloudWorks.Persistence
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddPersistenceDI(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistenceDI(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-            services.AddDbContext<CloudWorksDbContext>(
-            options => options.UseNpgsql(
-                GetConnectionString(configuration, "DefaultDb")
-            ));
+            if (!environment.IsEnvironment("Test"))
+            {
+                services.AddDbContext<CloudWorksDbContext>(
+                    options => options.UseNpgsql(GetConnectionString(configuration, "DefaultDb"))
+                );
+            }
 
             services.AddScoped<ISiteRepository, SiteRepository>();
             services.AddScoped<IAccessPointRepository, AccessPointRepository>();

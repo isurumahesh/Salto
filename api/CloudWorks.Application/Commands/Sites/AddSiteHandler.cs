@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 
 namespace CloudWorks.Application.Commands.Sites
 {
-    public class AddSiteHandler : IRequestHandler<AddSiteCommand, Guid>
+    public class AddSiteHandler : IRequestHandler<AddSiteCommand, SiteDTO>
     {
         private readonly ISiteRepository _repository;
         private readonly IMapper _mapper;
@@ -15,12 +16,11 @@ namespace CloudWorks.Application.Commands.Sites
             _mapper = mapper;
         }
 
-        public async Task<Guid> Handle(AddSiteCommand request, CancellationToken cancellationToken)
+        public async Task<SiteDTO> Handle(AddSiteCommand request, CancellationToken cancellationToken)
         {
             var site = _mapper.Map<Site>(request.AddSiteDTO);
             await _repository.AddAsync(site);
-            await _repository.SaveChangesAsync(cancellationToken);
-            return site.Id;
+            return _mapper.Map<SiteDTO>(site);
         }
     }
 }

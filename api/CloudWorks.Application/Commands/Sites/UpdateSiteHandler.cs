@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CloudWorks.Application.Exceptions;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 
@@ -18,9 +19,13 @@ namespace CloudWorks.Application.Commands.Sites
         public async Task Handle(UpdateSiteCommand request, CancellationToken cancellationToken)
         {
             var existingSite = await _repository.GetByIdAsync(request.UpdateSiteDTO.Id);
+            if (existingSite == null)
+            {
+                throw new NotFoundException($"Site with ID {request.UpdateSiteDTO.Id} not found.");
+            }
+
             var site = _mapper.Map(request.UpdateSiteDTO, existingSite);
             await _repository.UpdateAsync(site);
-            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

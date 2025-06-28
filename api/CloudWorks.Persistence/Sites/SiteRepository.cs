@@ -20,20 +20,22 @@ namespace CloudWorks.Persistence.Sites
 
         public IQueryable<Site> Query() => _context.Sites.AsQueryable();
 
-        public async Task AddAsync(Site site) =>
+        public async Task AddAsync(Site site)
+        {
             await _context.Sites.AddAsync(site);
-
-        public Task UpdateAsync(Site site)
+            await _context.SaveChangesAsync();
+        }
+            
+        public async Task UpdateAsync(Site site)
         {
             _context.Sites.Update(site);
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Site site)
         {
-            var site = await GetByIdAsync(id);
-            if (site is not null)
-                _context.Sites.Remove(site);
+            _context.Sites.Remove(site);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId) =>
@@ -42,8 +44,5 @@ namespace CloudWorks.Persistence.Sites
                 .Include(sp => sp.Profile)
                 .Select(sp => sp.Profile)
                 .ToListAsync();
-
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
-            _context.SaveChangesAsync(cancellationToken);
     }
 }

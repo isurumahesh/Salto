@@ -12,18 +12,6 @@ namespace CloudWorks.Api.Configuration;
 
 public static class ConfigurationExtensions
 {
-    public static void AddDataAccess(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
-    {
-        services.AddDbContext<CloudWorksDbContext>(
-            options => options.UseNpgsql(
-                GetConnectionString(configuration, "DefaultDb")
-            )
-        );
-    }
-
     public static void AddServices(
         this IServiceCollection services,
         IConfiguration configuration

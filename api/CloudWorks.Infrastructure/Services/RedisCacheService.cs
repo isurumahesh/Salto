@@ -1,5 +1,6 @@
 ﻿using CloudWorks.Application;
 using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace CloudWorks.Infrastructure.Services
     public class RedisCacheService : ICacheService
     {
         private readonly IDistributedCache _distributedCache;
+        private readonly IConnectionMultiplexer _redis;
 
-        public RedisCacheService(IDistributedCache distributedCache)
+        public RedisCacheService(IDistributedCache distributedCache, IConnectionMultiplexer redis)
         {
             _distributedCache = distributedCache;
+            _redis = redis;
         }
 
         public T Get<T>(string key)
@@ -36,6 +39,19 @@ namespace CloudWorks.Infrastructure.Services
         public void Remove(string key)
         {
             _distributedCache.Remove(key);
+        }
+
+        public void RemoveByPattern(string pattern)
+        {
+            foreach (var endpoint in _redis.GetEndPoints())
+            {
+                var server = _redis.GetServer(endpoint);
+                var keys = server.Keys(pattern: pattern + "*").ToArray();
+                foreach (var key in keys)
+                {
+                    _distributedCache.Remove(key);
+                }
+            }
         }
     }
 }

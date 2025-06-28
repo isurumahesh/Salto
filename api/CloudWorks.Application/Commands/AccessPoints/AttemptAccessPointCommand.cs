@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.AccessPoints
 {
-    public record AttemptAccessPointCommand(
-        OpenAccessPointCommand OpenAccessPointCommand,
-        Guid SiteId,
-        DateTime Now
-    ) : IRequest<AccessPointCommandResult<OpenAccessPointCommand>>;
+    public record AttemptAccessPointCommand(OpenAccessPointCommand OpenAccessPointCommand, Guid SiteId, DateTime Now) 
+        : IRequest<AccessPointCommandResult<OpenAccessPointCommand>>;
 }

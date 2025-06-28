@@ -12,8 +12,7 @@ namespace CloudWorks.Services.Contracts.AccessPoints
 
         Task UpdateAsync(AccessPoint accessPoint);
 
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(AccessPoint accessPoint);
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

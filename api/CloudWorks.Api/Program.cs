@@ -58,7 +58,7 @@ builder.Services.AddRateLimiter(options =>
 });
 
 
-builder.Services.AddAppDI(builder.Configuration);
+builder.Services.AddAppDI(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
@@ -77,3 +77,6 @@ app.UseRateLimiter();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{ }
