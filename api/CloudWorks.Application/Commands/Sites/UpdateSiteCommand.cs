@@ -9,5 +9,5 @@ namespace CloudWorks.Application.Commands.Sites
     {
         public IEnumerable<string> CachePatternsToInvalidate
             => new[] { CacheConstants.CaccheKeySites };
-}
+    }
 }

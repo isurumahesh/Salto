@@ -4,7 +4,7 @@ using MediatR;
 
 namespace CloudWorks.Application.Commands.Sites
 {
-    public record DeleteSiteCommand(Guid Id) : IRequest,ICacheInvalidator
+    public record DeleteSiteCommand(Guid Id) : IRequest, ICacheInvalidator
     {
         public IEnumerable<string> CachePatternsToInvalidate
             => new[] { CacheConstants.CaccheKeySites };

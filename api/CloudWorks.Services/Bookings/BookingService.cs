@@ -35,7 +35,7 @@ public class BookingService : IBookingService
         {
             Id = Guid.NewGuid(),
             Name = name,
-            SiteId = siteId, 
+            SiteId = siteId,
             Profiles = siteProfilesEntities,
             Schedules = schedules,
             AccessPoints = accessPointsEntities

@@ -2,8 +2,6 @@
 using CloudWorks.Application.Constants;
 using CloudWorks.Application.DTOs.AccessPoints;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Sites;
-using CloudWorks.Data.Contracts.Models;
 using CloudWorks.Services.Contracts.AccessPoints;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

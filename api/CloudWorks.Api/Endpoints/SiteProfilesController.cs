@@ -1,9 +1,7 @@
 ﻿using CloudWorks.Application.Commands.SiteProfiles;
 using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.Queries.SiteProfiles;
-using CloudWorks.Data.Contracts.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudWorks.Api.Endpoints
@@ -21,7 +19,7 @@ namespace CloudWorks.Api.Endpoints
 
         [HttpPost]
         public async Task<IActionResult> AddSiteProfile([FromBody] AddSiteProfileDTO dto, CancellationToken cancellationToken)
-        {          
+        {
             var result = await _mediator.Send(new AddSiteProfileCommand(dto), cancellationToken);
             return CreatedAtAction(nameof(GetByProfileId), new { profileId = result.ProfileId }, result);
         }

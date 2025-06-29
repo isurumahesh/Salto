@@ -63,7 +63,6 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
-
 builder.Services.AddAppDI(builder.Configuration, builder.Environment);
 
 var app = builder.Build();

@@ -1,12 +1,6 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.AccessPoints;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Persistence.AccessPoints
 {
@@ -42,6 +36,5 @@ namespace CloudWorks.Persistence.AccessPoints
             _context.AccessPoints.Remove(accessPoint);
             await _context.SaveChangesAsync();
         }
-
     }
 }
