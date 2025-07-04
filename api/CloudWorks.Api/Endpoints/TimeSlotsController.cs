@@ -24,10 +24,10 @@ namespace CloudWorks.Api.Endpoints
             return Ok(result);
         }
 
-        [HttpGet("continuous-access")]
+        [HttpPost("continuous-access")]
         public async Task<IActionResult> GetUserContinuousAccess([FromBody] GetContinuousTimeSlotsRequestDTO request)
         {
-            var query = new GetUserContinuousAccessQuery(request.UserId, request.AccessPointIds, request.Start, request.End);
+            var query = new GetUserContinuousAccessQuery(request.ProfileId, request.AccessPointIds, request.Start, request.End);
             var result = await _mediator.Send(query);
             return Ok(result);
         }

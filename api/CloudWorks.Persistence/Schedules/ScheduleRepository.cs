@@ -52,11 +52,17 @@ namespace CloudWorks.Persistence.Schedules
             DateTime end,
             CancellationToken cancellationToken)
         {
+            var schedules2 = await _context.Schedules
+                .Where(s =>
+                    s.StartUtc < end &&
+                    s.EndUtc > start &&
+                    s.Booking.Profiles.Any(p => p.ProfileId == userId)).ToListAsync(cancellationToken);
+
             var schedules = await _context.Schedules
                 .Where(s =>
                     s.StartUtc < end &&
                     s.EndUtc > start &&
-                    s.Booking.Profiles.Any(p => p.Id == userId) &&
+                    s.Booking.Profiles.Any(p => p.ProfileId == userId) &&
                     s.Booking.AccessPoints.Any(ap => accessPointIds.Contains(ap.Id)))
                 .Include(s => s.Booking.AccessPoints)
                 .ToListAsync(cancellationToken);
@@ -67,12 +73,11 @@ namespace CloudWorks.Persistence.Schedules
                 foreach (var ap in schedule.Booking.AccessPoints)
                 {
                     if (accessPointIds.Contains(ap.Id))
-                    {
-                        // Clip to query window
+                    {                        
                         var actualStart = schedule.StartUtc > start ? schedule.StartUtc : start;
                         var actualEnd = schedule.EndUtc < end ? schedule.EndUtc : end;
 
-                        if (actualEnd > actualStart) // Only add non-empty intervals
+                        if (actualEnd > actualStart) 
                         {
                             result.Add(new OccupiedSlotDto
                             {

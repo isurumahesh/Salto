@@ -1,4 +1,4 @@
-﻿using CloudWorks.Application;
+﻿using CloudWorks.Application.Services;
 using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System;

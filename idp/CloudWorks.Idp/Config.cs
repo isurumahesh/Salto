@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace CloudWorks.Idp;
 public static class Config
@@ -8,13 +9,18 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResources.Email()
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
             new ApiScope("scwapi:manage"),
-            new ApiScope("scwapi:use"),
+            
+            new ApiScope("scwapi:use")
+            {
+                UserClaims={JwtClaimTypes.Email, JwtClaimTypes.Role}
+            }
         };
 
     public static IEnumerable<Client> Clients =>

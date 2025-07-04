@@ -1,4 +1,5 @@
-﻿using CloudWorks.Application.DTOs.AccessPoints;
+﻿using CloudWorks.Application.DTOs.AccessEvents;
+using CloudWorks.Application.DTOs.AccessPoints;
 using CloudWorks.Application.DTOs.Profiles;
 using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.DTOs.Sites;
@@ -18,6 +19,9 @@ namespace CloudWorks.Application
             CreateMap<Site, SiteDTO>().ReverseMap();
             CreateMap<AddProfileDTO, Profile>();
             CreateMap<AddSiteProfileDTO, SiteProfile>();
+            CreateMap<AccessEvent, AccessEventDTO>()
+            .ForMember(dest => dest.AccessPointName, opt => opt.MapFrom(src => src.AccessPoint!.Name))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Profile!.Email));
         }
     }
 }

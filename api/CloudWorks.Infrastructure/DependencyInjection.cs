@@ -1,4 +1,4 @@
-﻿using CloudWorks.Application;
+﻿using CloudWorks.Application.Services;
 using CloudWorks.Infrastructure.Services;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +46,8 @@ namespace CloudWorks.Infrastructure
             services.AddScoped<ICacheService, RedisCacheService>();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;
         }

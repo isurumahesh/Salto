@@ -39,7 +39,7 @@ public class TestUsers
                         new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
                         new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json),
                         new Claim(JwtClaimTypes.Role, "Administrator"),
-                        new Claim(JwtClaimTypes.Role, "User")
+                        new Claim(JwtClaimTypes.Role, "User"),
                     }
                 },
                 new TestUser

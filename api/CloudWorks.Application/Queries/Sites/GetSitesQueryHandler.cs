@@ -2,6 +2,7 @@
 using CloudWorks.Application.Constants;
 using CloudWorks.Application.DTOs.Pagination;
 using CloudWorks.Application.DTOs.Sites;
+using CloudWorks.Application.Services;
 using CloudWorks.Data.Contracts.Models;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
@@ -11,26 +12,23 @@ namespace CloudWorks.Application.Queries.Sites
 {
     public class GetSitesQueryHandler : IRequestHandler<GetSitesQuery, PagedResult<SiteDTO>>
     {
-        private readonly ISiteRepository _siteRepository;
-        private readonly ICacheService _cacheService;
+        private readonly ISiteRepository _siteRepository;       
+        private readonly ICurrentUserService _currentUser;
         private readonly IMapper _mapper;
 
-        public GetSitesQueryHandler(ISiteRepository siteRepository, IMapper mapper, ICacheService cacheService)
+        public GetSitesQueryHandler(ISiteRepository siteRepository, IMapper mapper, ICurrentUserService currentUser)
         {
             _siteRepository = siteRepository;
-            _mapper = mapper;
-            _cacheService = cacheService;
+            _mapper = mapper;         
+            _currentUser = currentUser;
         }
 
         public async Task<PagedResult<SiteDTO>> Handle(GetSitesQuery request, CancellationToken cancellationToken)
         {
+            var profileId = await _currentUser.GetProfileIdAsync();
+
             var filter = request.PagingFilter;
-            string cacheKey = $"sites:{filter.PageNumber}:{filter.PageSize}:{filter.Search}";
-
-            var cached = _cacheService.Get<PagedResult<SiteDTO>>(cacheKey);
-            if (cached != null)
-                return cached;
-
+                  
             var query = _siteRepository.Query();
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
@@ -51,9 +49,7 @@ namespace CloudWorks.Application.Queries.Sites
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize
             };
-
-            _cacheService.Set(cacheKey, result, TimeSpan.FromMinutes(CacheConstants.CacheDurationInMinutes));
-
+          
             return result;
         }
     }

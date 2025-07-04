@@ -27,6 +27,7 @@ public class SitesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     [ProducesResponseType(typeof(PagedResult<SiteDTO>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromQuery] PagingFilter pagingFilter, CancellationToken cancellationToken = default)
     {
@@ -35,6 +36,7 @@ public class SitesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     [ProducesResponseType(typeof(SiteDTO), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSiteById(Guid id, CancellationToken cancellationToken)
     {
@@ -45,6 +47,7 @@ public class SitesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post(AddSiteDTO addSiteDTO, CancellationToken cancellationToken)
