@@ -13,7 +13,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddAuthentication("Bearer")
@@ -40,6 +39,13 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser();
         policy.RequireClaim("scope", "scwapi:use");
     });
+
+    options.AddPolicy("BookingsManagePolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("scope", "scwapi:use");
+        policy.RequireRole("Administrator");
+    });
 });
 
 builder.Services.AddRateLimiter(options =>
@@ -56,7 +62,6 @@ builder.Services.AddRateLimiter(options =>
     );
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
-
 
 builder.Services.AddAppDI(builder.Configuration, builder.Environment);
 

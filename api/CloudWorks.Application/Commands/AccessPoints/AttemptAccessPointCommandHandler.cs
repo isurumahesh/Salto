@@ -4,11 +4,6 @@ using CloudWorks.Services.Contracts.AccessPoints;
 using CloudWorks.Services.Contracts.Bookings;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.AccessPoints
 {
@@ -29,7 +24,6 @@ namespace CloudWorks.Application.Commands.AccessPoints
             AttemptAccessPointCommand command,
             CancellationToken cancellationToken)
         {
-
             var errorMessage = string.Empty;
             bool hasValidBooking = false;
             try
@@ -45,7 +39,7 @@ namespace CloudWorks.Application.Commands.AccessPoints
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                this._logger.LogError(ex, "Error checking booking for access point {AccessPointId} at site {SiteId}", 
+                this._logger.LogError(ex, "Error checking booking for access point {AccessPointId} at site {SiteId}",
                     command.OpenAccessPointCommand.AccessPointId, command.SiteId);
             }
 
@@ -72,7 +66,5 @@ namespace CloudWorks.Application.Commands.AccessPoints
 
             return result;
         }
-
     }
-
 }

@@ -35,7 +35,7 @@ public class BookingService : IBookingService
         {
             Id = Guid.NewGuid(),
             Name = name,
-            SiteId = siteId, 
+            SiteId = siteId,
             Profiles = siteProfilesEntities,
             Schedules = schedules,
             AccessPoints = accessPointsEntities
@@ -47,30 +47,6 @@ public class BookingService : IBookingService
         );
 
         await _cloudWorksDbContext.SaveChangesAsync(cancellationToken);
-
-        //foreach (var email in userEmails)
-        //{
-        //    var siteProfile = new SiteProfile()
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        SiteId = siteId,
-        //        Profile = new Profile()
-        //        {
-        //            Id = Guid.NewGuid(),
-        //            Email = email
-        //        }
-        //    };
-
-        //    await _cloudWorksDbContext.Set<SiteProfile>().AddAsync(
-        //        siteProfile,
-        //        cancellationToken
-        //    );
-
-        //    booking.Profiles.Add(siteProfile);
-
-        //    await _cloudWorksDbContext.SaveChangesAsync(cancellationToken);
-        //}
-
         return booking;
     }
 }

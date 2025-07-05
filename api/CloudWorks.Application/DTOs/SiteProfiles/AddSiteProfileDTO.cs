@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CloudWorks.Application.DTOs.SiteProfiles
+﻿namespace CloudWorks.Application.DTOs.SiteProfiles
 {
     public record AddSiteProfileDTO
     {

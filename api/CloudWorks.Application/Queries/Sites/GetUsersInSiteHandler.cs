@@ -1,4 +1,5 @@
-﻿using CloudWorks.Data.Contracts.Entities;
+﻿using CloudWorks.Application.Exceptions;
+using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 
@@ -15,6 +16,12 @@ namespace CloudWorks.Application.Queries.Sites
 
         public async Task<IEnumerable<Profile>> Handle(GetUsersInSiteQuery request, CancellationToken cancellationToken)
         {
+            var site = await _repository.GetByIdAsync(request.SiteId);
+            if (site is null)
+            {
+                throw new NotFoundException($"Site with ID {request.SiteId} not found.");
+            }
+
             return await _repository.GetUsersInSiteAsync(request.SiteId);
         }
     }

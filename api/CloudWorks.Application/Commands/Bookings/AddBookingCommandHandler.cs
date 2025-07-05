@@ -4,12 +4,6 @@ using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.Bookings
 {
@@ -42,7 +36,7 @@ namespace CloudWorks.Application.Commands.Bookings
                 schedules.Add(new Schedule
                 {
                     Id = Guid.NewGuid(),
-                    StartUtc= s.StartUtc,
+                    StartUtc = s.StartUtc,
                     EndUtc = s.EndUtc,
                     SiteId = command.SiteId,
                     Value = serializer.SerializeToString(calendar)
@@ -59,5 +53,4 @@ namespace CloudWorks.Application.Commands.Bookings
             );
         }
     }
-
 }

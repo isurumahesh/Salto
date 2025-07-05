@@ -2,11 +2,6 @@
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.AccessEvents;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Persistence.AccessEvents
 {
