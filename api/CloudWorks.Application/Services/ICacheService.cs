@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudWorks.Application.Services
+namespace CloudWorks.Application
 {
     public interface ICacheService
     {

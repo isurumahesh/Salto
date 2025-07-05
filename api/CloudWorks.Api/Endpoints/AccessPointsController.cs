@@ -14,7 +14,7 @@ namespace CloudWorks.Api.Endpoints;
 
 [ApiController]
 [Route("sites/{siteId:guid}/accessPoints")]
-
+//[Authorize]
 public class AccessPointsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -72,8 +72,7 @@ public class AccessPointsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = accessPoint.Id }, accessPoint);
     }
 
-    [HttpPut("{accessPointId:guid}")]
-    [Authorize(Policy = "ManageAccess")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -93,8 +92,7 @@ public class AccessPointsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{accessPointId:guid}")]
-    [Authorize(Policy = "ManageAccess")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete([FromRoute] Guid accessPointId)
