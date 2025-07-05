@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CloudWorks.Application.DTOs.Sites;
+using CloudWorks.Application.Exceptions;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 
@@ -18,9 +19,9 @@ namespace CloudWorks.Application.Queries.Sites
 
         public async Task<SiteDTO> Handle(GetSiteByIdQuery request, CancellationToken cancellationToken)
         {
-            var site = await _repository.GetByIdAsync(request.Id);
+            var site = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (site is null)
-                return null;
+                throw new NotFoundException($"Site with ID {request.Id} not found.");
 
             return _mapper.Map<SiteDTO>(site);
         }

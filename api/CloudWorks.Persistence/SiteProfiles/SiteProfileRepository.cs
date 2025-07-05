@@ -16,7 +16,7 @@ namespace CloudWorks.Persistence.SiteProfiles
 
         public async Task AddAsync(SiteProfile siteProfile, CancellationToken cancellationToken)
         {
-            _context.SiteProfiles.Add(siteProfile);
+            await _context.SiteProfiles.AddAsync(siteProfile, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 

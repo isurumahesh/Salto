@@ -3,6 +3,7 @@ using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.Bookings;
 using Ical.Net;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace CloudWorks.Persistence.Bookings
 {
@@ -15,8 +16,8 @@ namespace CloudWorks.Persistence.Bookings
             _context = context;
         }
 
-        public async Task<Booking?> GetByIdAsync(Guid id) =>
-            await _context.Bookings.FindAsync(id);
+        public async Task<Booking?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+            await _context.Bookings.FindAsync(id, cancellationToken);
 
         public IQueryable<Booking> Query() =>
                  _context.Bookings
@@ -27,21 +28,45 @@ namespace CloudWorks.Persistence.Bookings
                 .Include(b => b.AccessPoints)
                 .AsQueryable();
 
-        public async Task<IEnumerable<Booking>> GetBySiteIdAsync(Guid siteId) =>
+        public async Task<List<Booking>> GetBySiteIdAsync(Guid siteId, CancellationToken cancellationToken) =>
             await _context.Bookings
                 .Where(b => b.SiteId == siteId)
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
-        public async Task DeleteAsync(Guid id)
-        {
-            var booking = await GetByIdAsync(id);
-            if (booking is not null)
-                _context.Bookings.Remove(booking);
+        public async Task DeleteAsync(Booking booking, CancellationToken cancellationToken)
+        {           
+            _context.Bookings.Remove(booking);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<bool> HasValidBookingAsync(
-     Guid profileId, Guid accessPointId, Guid siteId, DateTime nowUtc, CancellationToken cancellationToken)
+        public async Task<Booking> AddAsync(Guid siteId, string name, List<Guid> siteProfiles, List<Guid> accessPoints, List<Schedule> schedules, CancellationToken cancellationToken)
+        {
+            var accessPointsEntities = await _context.AccessPoints
+             .Where(x => x.SiteId == siteId && accessPoints.Contains(x.Id))
+             .ToListAsync(cancellationToken);
+
+            var siteProfilesEntities = await _context.SiteProfiles
+                .Where(x => x.SiteId == siteId && siteProfiles.Contains(x.Id))
+                .ToListAsync(cancellationToken);
+
+            var booking = new Booking
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                SiteId = siteId,
+                Profiles = siteProfilesEntities,
+                Schedules = schedules,
+                AccessPoints = accessPointsEntities
+            };
+
+            await _context.Bookings.AddAsync(booking, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return booking;
+        }
+
+        public async Task<bool> HasValidBookingAsync(Guid profileId, Guid accessPointId, Guid siteId, DateTime nowUtc, CancellationToken cancellationToken)
         {
             return await _context.Bookings
                 .Include(b => b.Schedules)
@@ -56,8 +81,5 @@ namespace CloudWorks.Persistence.Bookings
                     cancellationToken);
         }
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
-            _context.SaveChangesAsync(cancellationToken);
-      
     }
 }

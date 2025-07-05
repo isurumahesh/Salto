@@ -19,9 +19,9 @@ namespace CloudWorks.Api.Endpoints
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAccessEventsForSite([FromRoute] Guid siteId)
+        public async Task<IActionResult> GetAccessEventsForSite([FromRoute] Guid siteId, CancellationToken cancellationToken)
         {
-            var events = await _mediator.Send(new GetAccessEventsBySiteQuery(siteId));
+            var events = await _mediator.Send(new GetAccessEventsBySiteQuery(siteId), cancellationToken);
             return Ok(events);
         }
     }

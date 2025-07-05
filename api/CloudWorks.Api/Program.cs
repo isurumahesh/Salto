@@ -1,5 +1,4 @@
 using CloudWorks.Api;
-using CloudWorks.Api.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
@@ -13,7 +12,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>

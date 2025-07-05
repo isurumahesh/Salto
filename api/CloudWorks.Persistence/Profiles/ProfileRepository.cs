@@ -14,10 +14,11 @@ namespace CloudWorks.Persistence.Profiles
             _context = context;
         }
 
-        public async Task AddAsync(Profile profile, CancellationToken cancellationToken)
+        public async Task<Profile> AddAsync(Profile profile, CancellationToken cancellationToken)
         {
-            _context.Profiles.Add(profile);
+            await _context.Profiles.AddAsync(profile, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
+            return profile;
         }
 
         public async Task<Profile?> GetByEmailAsync(string email, CancellationToken cancellationToken)

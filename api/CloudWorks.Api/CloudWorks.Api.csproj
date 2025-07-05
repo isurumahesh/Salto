@@ -23,7 +23,6 @@
     <ProjectReference Include="..\CloudWorks.Infrastructure\CloudWorks.Infrastructure.csproj" />
     <ProjectReference Include="..\CloudWorks.Persistence\CloudWorks.Persistence.csproj" />
     <ProjectReference Include="..\CloudWorks.Services.Contracts\CloudWorks.Services.Contracts.csproj" />
-    <ProjectReference Include="..\CloudWorks.Services\CloudWorks.Services.csproj" />
   </ItemGroup>
 
 </Project>

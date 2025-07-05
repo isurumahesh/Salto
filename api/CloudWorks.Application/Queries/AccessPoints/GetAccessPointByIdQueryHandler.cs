@@ -21,7 +21,7 @@ namespace CloudWorks.Application.Queries.AccessPoints
 
         public async Task<AccessPointDTO> Handle(GetAccessPointByIdQuery request, CancellationToken cancellationToken)
         {
-            var accessPoint = await _accessPointRepository.GetByIdAsync(request.Id);
+            var accessPoint = await _accessPointRepository.GetByIdAsync(request.Id, cancellationToken);
 
             if (accessPoint == null)
             {

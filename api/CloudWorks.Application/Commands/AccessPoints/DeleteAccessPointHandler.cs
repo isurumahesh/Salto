@@ -15,13 +15,13 @@ namespace CloudWorks.Application.Commands.AccessPoints
 
         public async Task Handle(DeleteAccessPointCommand request, CancellationToken cancellationToken)
         {
-            var accessPoint = await _repository.GetByIdAsync(request.Id);
+            var accessPoint = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (accessPoint is null)
             {
                 throw new NotFoundException($"Access Point with ID {request.Id} not found.");
             }
 
-            await _repository.DeleteAsync(accessPoint);
+            await _repository.DeleteAsync(accessPoint, cancellationToken);
         }
     }
 }

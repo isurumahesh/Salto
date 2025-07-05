@@ -24,7 +24,7 @@ namespace CloudWorks.Application.Queries.Bookings
 
         public async Task<BookingDTO> Handle(GetBookingByIdQuery request, CancellationToken cancellationToken)
         {
-            var booking = await _bookingRepository.GetByIdAsync(request.Id);
+            var booking = await _bookingRepository.GetByIdAsync(request.Id, cancellationToken);
 
             if (booking == null)
             {

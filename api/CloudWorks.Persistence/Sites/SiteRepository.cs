@@ -14,34 +14,37 @@ namespace CloudWorks.Persistence.Sites
             _context = context;
         }
 
-        public async Task<Site?> GetByIdAsync(Guid id) =>
-            await _context.Sites.FindAsync(id);
+        public async Task<Site?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+            await _context.Sites.FindAsync(id, cancellationToken);
 
-        public IQueryable<Site> Query() => _context.Sites.AsNoTracking().AsQueryable();
+        public IQueryable<Site> Query() =>
+           _context.Sites.AsNoTracking().AsQueryable();
 
-        public async Task AddAsync(Site site)
+        public async Task AddAsync(Site site, CancellationToken cancellationToken)
         {
-            await _context.Sites.AddAsync(site);
-            await _context.SaveChangesAsync();
+            await _context.Sites.AddAsync(site, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Site site)
+        public async Task UpdateAsync(Site site, CancellationToken cancellationToken)
         {
             _context.Sites.Update(site);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(Site site)
+        public async Task DeleteAsync(Site site, CancellationToken cancellationToken)
         {
             _context.Sites.Remove(site);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId) =>
-            await _context.SiteProfiles
+        public async Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId, CancellationToken cancellationToken)
+        {
+            return await _context.SiteProfiles
                 .Where(sp => sp.SiteId == siteId)
                 .Include(sp => sp.Profile)
                 .Select(sp => sp.Profile)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
+        }
     }
 }

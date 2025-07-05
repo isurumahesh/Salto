@@ -16,13 +16,13 @@ namespace CloudWorks.Application.Queries.Sites
 
         public async Task<IEnumerable<Profile>> Handle(GetUsersInSiteQuery request, CancellationToken cancellationToken)
         {
-            var site = await _repository.GetByIdAsync(request.SiteId);
+            var site = await _repository.GetByIdAsync(request.SiteId, cancellationToken);
             if (site is null)
             {
                 throw new NotFoundException($"Site with ID {request.SiteId} not found.");
             }
 
-            return await _repository.GetUsersInSiteAsync(request.SiteId);
+            return await _repository.GetUsersInSiteAsync(request.SiteId, cancellationToken);
         }
     }
 }

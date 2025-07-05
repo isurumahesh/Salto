@@ -20,7 +20,7 @@ namespace CloudWorks.Application.Commands.AccessPoints
         public async Task<AccessPointDTO> Handle(AddAccessPointCommand request, CancellationToken cancellationToken)
         {
             var accessPoint = _mapper.Map<AccessPoint>(request.AddAccessPointDTO);
-            await _repository.AddAsync(accessPoint);
+            await _repository.AddAsync(accessPoint, cancellationToken);
             return _mapper.Map<AccessPointDTO>(accessPoint);
         }
     }

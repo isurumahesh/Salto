@@ -2,6 +2,7 @@
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.AccessEvents;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace CloudWorks.Persistence.AccessEvents
 {
@@ -14,24 +15,23 @@ namespace CloudWorks.Persistence.AccessEvents
             _dbContext = dbContext;
         }
 
-        public async Task AddAsync(AccessEvent accessEvent)
+        public async Task<AccessEvent> AddAsync(AccessEvent accessEvent, CancellationToken cancellationToken)
         {
             await _dbContext.AccessEvents.AddAsync(accessEvent);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return accessEvent;
         }
 
-        public async Task<List<AccessEvent>> GetBySiteIdAsync(Guid siteId, CancellationToken cancellationToken = default)
+        public async Task<List<AccessEvent>> GetBySiteIdAsync(Guid siteId, CancellationToken cancellationToken)
         {
             return await _dbContext.AccessEvents
+                .AsNoTracking()
                 .Where(e => e.SiteId == siteId)
                 .Include(e => e.AccessPoint)
                 .Include(e => e.Profile)
+                .AsSplitQuery()
                 .OrderByDescending(e => e.Timestamp)
                 .ToListAsync(cancellationToken);
-        }
-
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

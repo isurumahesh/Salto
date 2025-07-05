@@ -2,6 +2,7 @@
 using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.Queries.SiteProfiles;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

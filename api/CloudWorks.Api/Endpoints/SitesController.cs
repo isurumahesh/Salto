@@ -35,22 +35,22 @@ public class SitesController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{siteId:guid}")]
     [Authorize]
     [ProducesResponseType(typeof(SiteDTO), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetSiteById(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSiteById(Guid siteId, CancellationToken cancellationToken)
     {
-        var site = await _mediator.Send(new GetSiteByIdQuery(id), cancellationToken);
+        var site = await _mediator.Send(new GetSiteByIdQuery(siteId), cancellationToken);
         if (site == null)
             return NotFound();
         return Ok(site);
     }
 
-    [HttpGet("{id}/users")]
+    [HttpGet("{siteId:guid}/users")]
     [ProducesResponseType(typeof(List<Profile>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUsersBySiteId(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUsersBySiteId(Guid siteId, CancellationToken cancellationToken)
     {
-        var users = await _mediator.Send(new GetUsersInSiteQuery(id), cancellationToken);
+        var users = await _mediator.Send(new GetUsersInSiteQuery(siteId), cancellationToken);
         return Ok(users);
     }
 

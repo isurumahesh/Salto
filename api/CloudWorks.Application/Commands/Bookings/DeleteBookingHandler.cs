@@ -1,4 +1,5 @@
-﻿using CloudWorks.Services.Contracts.Bookings;
+﻿using CloudWorks.Application.Exceptions;
+using CloudWorks.Services.Contracts.Bookings;
 using MediatR;
 
 namespace CloudWorks.Application.Commands.Bookings
@@ -14,8 +15,14 @@ namespace CloudWorks.Application.Commands.Bookings
 
         public async Task Handle(DeleteBookingCommand request, CancellationToken cancellationToken)
         {
-            await _repository.DeleteAsync(request.Id);
-            await _repository.SaveChangesAsync(cancellationToken);
+            var booking = await _repository.GetByIdAsync(request.Id, cancellationToken);
+            if (booking is null)
+            {
+                throw new NotFoundException($"Booking with ID {request.Id} not found.");
+            }
+
+            await _repository.DeleteAsync(booking, cancellationToken);
+
         }
     }
 }

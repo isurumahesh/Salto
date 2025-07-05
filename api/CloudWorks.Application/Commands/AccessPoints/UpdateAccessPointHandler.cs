@@ -18,7 +18,7 @@ namespace CloudWorks.Application.Commands.AccessPoints
 
         public async Task Handle(UpdateAccessPointCommand request, CancellationToken cancellationToken)
         {
-            var existingAccessPoint = await _repository.GetByIdAsync(request.UpdateAccessPointDTO.Id);
+            var existingAccessPoint = await _repository.GetByIdAsync(request.UpdateAccessPointDTO.Id, cancellationToken);
             if (existingAccessPoint is null)
             {
                 throw new NotFoundException($"Access Point with ID {request.UpdateAccessPointDTO.Id} not found.");
@@ -26,7 +26,7 @@ namespace CloudWorks.Application.Commands.AccessPoints
 
             var accessPoint = _mapper.Map(request.UpdateAccessPointDTO, existingAccessPoint);
 
-            await _repository.UpdateAsync(accessPoint);
+            await _repository.UpdateAsync(accessPoint, cancellationToken);
         }
     }
 }

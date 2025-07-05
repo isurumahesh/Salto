@@ -18,14 +18,14 @@ namespace CloudWorks.Application.Commands.Sites
 
         public async Task Handle(UpdateSiteCommand request, CancellationToken cancellationToken)
         {
-            var existingSite = await _repository.GetByIdAsync(request.UpdateSiteDTO.Id);
+            var existingSite = await _repository.GetByIdAsync(request.UpdateSiteDTO.Id, cancellationToken);
             if (existingSite == null)
             {
                 throw new NotFoundException($"Site with ID {request.UpdateSiteDTO.Id} not found.");
             }
 
             var site = _mapper.Map(request.UpdateSiteDTO, existingSite);
-            await _repository.UpdateAsync(site);
+            await _repository.UpdateAsync(site, cancellationToken);
         }
     }
 }

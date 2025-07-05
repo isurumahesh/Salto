@@ -15,13 +15,13 @@ namespace CloudWorks.Application.Commands.Sites
 
         public async Task Handle(DeleteSiteCommand request, CancellationToken cancellationToken)
         {
-            var existingSite = await _repository.GetByIdAsync(request.Id);
+            var existingSite = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (existingSite == null)
             {
                 throw new NotFoundException($"Site with ID {request.Id} not found.");
             }
 
-            await _repository.DeleteAsync(existingSite);
+            await _repository.DeleteAsync(existingSite, cancellationToken);
         }
     }
 }

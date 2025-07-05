@@ -8,6 +8,6 @@ namespace CloudWorks.Application.Commands.Sites
     public record UpdateSiteCommand(UpdateSiteDTO UpdateSiteDTO) : IRequest, ICacheInvalidator
     {
         public IEnumerable<string> CachePatternsToInvalidate
-            => new[] { CacheConstants.CaccheKeySites };
+            => new[] { CacheConstants.CacheKeySites };
     }
 }

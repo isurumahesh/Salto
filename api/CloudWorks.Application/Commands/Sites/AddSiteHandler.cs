@@ -19,7 +19,7 @@ namespace CloudWorks.Application.Commands.Sites
         public async Task<SiteDTO> Handle(AddSiteCommand request, CancellationToken cancellationToken)
         {
             var site = _mapper.Map<Site>(request.AddSiteDTO);
-            await _repository.AddAsync(site);
+            await _repository.AddAsync(site, cancellationToken);
             return _mapper.Map<SiteDTO>(site);
         }
     }

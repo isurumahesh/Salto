@@ -1,6 +1,7 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.AccessPoints;
+using Microsoft.EntityFrameworkCore;
 
 namespace CloudWorks.Persistence.AccessPoints
 {
@@ -13,29 +14,33 @@ namespace CloudWorks.Persistence.AccessPoints
             _context = context;
         }
 
-        public async Task<AccessPoint?> GetByIdAsync(Guid id) =>
-            await _context.AccessPoints.FindAsync(id);
+        public async Task<AccessPoint?> GetByIdAsync(Guid id, CancellationToken cancellationToken) =>
+            await _context.AccessPoints.FindAsync(id, cancellationToken);
 
-        public IQueryable<AccessPoint> QueryBySiteId(Guid siteId) =>
-      _context.AccessPoints.Where(ap => ap.SiteId == siteId);
-
-        public async Task<AccessPoint> AddAsync(AccessPoint accessPoint)
+        public IQueryable<AccessPoint> QueryBySiteId(Guid siteId)
         {
-            await _context.AccessPoints.AddAsync(accessPoint);
-            await _context.SaveChangesAsync();
+            return _context.AccessPoints
+                .AsNoTracking() 
+                .Where(ap => ap.SiteId == siteId);
+        }
+
+        public async Task<AccessPoint> AddAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
+        {
+            await _context.AccessPoints.AddAsync(accessPoint, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return accessPoint;
         }
 
-        public async Task UpdateAsync(AccessPoint accessPoint)
+        public async Task UpdateAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
         {
             _context.AccessPoints.Update(accessPoint);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(AccessPoint accessPoint)
+        public async Task DeleteAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
         {
             _context.AccessPoints.Remove(accessPoint);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

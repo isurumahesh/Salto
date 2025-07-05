@@ -9,11 +9,11 @@ namespace CloudWorks.Application.Commands.Bookings
 {
     public class AddBookingCommandHandler : IRequestHandler<AddBookingCommand, Booking>
     {
-        private readonly IBookingService _bookingService;
+        private readonly IBookingRepository _bookingRepository;
 
-        public AddBookingCommandHandler(IBookingService bookingService)
+        public AddBookingCommandHandler(IBookingRepository bookingRepository)
         {
-            _bookingService = bookingService;
+            _bookingRepository = bookingRepository;
         }
 
         public async Task<Booking> Handle(AddBookingCommand command, CancellationToken cancellationToken)
@@ -43,7 +43,7 @@ namespace CloudWorks.Application.Commands.Bookings
                 });
             }
 
-            return await _bookingService.AddBooking(
+            return await _bookingRepository.AddAsync(
                 command.SiteId,
                 command.Request.Name,
                 command.Request.SiteProfiles,
