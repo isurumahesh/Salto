@@ -12,13 +12,15 @@ namespace CloudWorks.IntegrationTests.Configuration
         public static Guid ProfileId { get; private set; }
         public static Guid AccessPointId { get; private set; }
         public static Guid BookingId { get; private set; }
+        public static Guid SiteProfileId { get; private set; }
 
-        internal static void Set(Guid siteId, Guid profileId, Guid accessPointId, Guid bookingId)
+        internal static void Set(Guid siteId, Guid profileId, Guid accessPointId, Guid bookingId, Guid siteProfileId)
         {
             SiteId = siteId;
             ProfileId = profileId;
             AccessPointId = accessPointId;
             BookingId = bookingId;
+            SiteProfileId = siteProfileId;
         }
     }
 }

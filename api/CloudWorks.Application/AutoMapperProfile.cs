@@ -26,7 +26,7 @@ namespace CloudWorks.Application
             .ForMember(dest => dest.AccessPointName, opt => opt.MapFrom(src => src.AccessPoint!.Name))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Profile!.Email));
 
-            CreateMap<SiteProfile, SiteProfileDTO>();
+            CreateMap<SiteProfile, SiteProfileDTO>().ReverseMap();
             CreateMap<Schedule, ScheduleDTO>();
             CreateMap<Booking, BookingDTO>();
         }

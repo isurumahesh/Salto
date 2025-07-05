@@ -6,9 +6,11 @@ namespace CloudWorks.Services.Contracts.SiteProfiles
     {
         Task AddAsync(SiteProfile siteProfile, CancellationToken cancellationToken);
 
+        Task<SiteProfile?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+
         Task<List<SiteProfile>> GetBySiteIdAsync(Guid siteId, CancellationToken cancellationToken);
 
-        Task<SiteProfile> GetByProfileIdAsync(Guid profileId, CancellationToken cancellationToken);
+        Task<List<SiteProfile>> GetByProfileIdAsync(Guid profileId, CancellationToken cancellationToken);
 
         Task SaveChangesAsync(CancellationToken cancellationToken);
     }

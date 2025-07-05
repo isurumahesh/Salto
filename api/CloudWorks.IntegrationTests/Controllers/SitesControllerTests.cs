@@ -1,6 +1,7 @@
 ﻿using CloudWorks.Application.DTOs.Pagination;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.IntegrationTests.Configuration;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -122,6 +123,78 @@ namespace CloudWorks.IntegrationTests.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetSites_ShouldReturnFirstPage_WithinReasonableTime()
+        {
+            // Arrange
+            var stopwatch = new Stopwatch();
+            string url = "/sites?PageNumber=1&PageSize=100";
+
+            // Act
+            stopwatch.Start();
+            var response = await _httpClient.GetAsync(url);
+            stopwatch.Stop();
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var elapsed = stopwatch.ElapsedMilliseconds;
+            Assert.True(elapsed < 750, $"Response took too long: {elapsed}ms");
+
+            var result = await response.Content.ReadFromJsonAsync<PagedResult<SiteDTO>>();
+            Assert.NotNull(result);
+            Assert.Equal(100, result.Items.Count());
+        }
+
+        [Fact]
+        public async Task GetSites_ReturnsFaster_OnSecondRequest_DueToCaching()
+        {
+            // Arrange
+            string url = "/sites?PageNumber=1&PageSize=100";
+
+            var stopwatch1 = new Stopwatch();
+            var stopwatch2 = new Stopwatch();
+
+            // Act
+            stopwatch1.Start();
+            var response1 = await _httpClient.GetAsync(url);
+            stopwatch1.Stop();
+
+            await Task.Delay(100);
+
+            // Act
+            stopwatch2.Start();
+            var response2 = await _httpClient.GetAsync(url);
+            stopwatch2.Stop();
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+
+            var time1 = stopwatch1.ElapsedMilliseconds;
+            var time2 = stopwatch2.ElapsedMilliseconds;
+
+            Assert.True(time2 < time1, $"Expected second call ({time2}ms) to be faster than first ({time1}ms)");
+        }
+
+        [Fact]
+        public async Task Post_ReturnsUnauthorized_WhenNoAuthHeader()
+        {
+            _httpClient = _factory.CreateClient(new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Invalid");
+
+            var site = new AddSiteDTO { Name = "Unauthorized Site" };
+
+            // Act
+            var response = await _httpClient.PostAsJsonAsync("/sites", site);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace CloudWorks.IntegrationTests.Configuration
     public static class TestDbSeeder
     {
         public static async Task Seed(CloudWorksDbContext context)
-        {          
+        {
             context.AccessEvents.RemoveRange(context.AccessEvents);
             context.Schedules.RemoveRange(context.Schedules);
             context.Bookings.RemoveRange(context.Bookings);
@@ -15,7 +15,7 @@ namespace CloudWorks.IntegrationTests.Configuration
             context.Profiles.RemoveRange(context.Profiles);
             context.Sites.RemoveRange(context.Sites);
             context.SaveChanges();
-        
+
             var site = new Site
             {
                 Id = Guid.NewGuid(),
@@ -82,7 +82,19 @@ namespace CloudWorks.IntegrationTests.Configuration
             await context.AccessEvents.AddAsync(accessEvent);
             await context.SaveChangesAsync();
 
-            TestData.Set(site.Id, profile.Id, accessPoint.Id, booking.Id);
+            TestData.Set(site.Id, profile.Id, accessPoint.Id, booking.Id, siteProfile.Id);
+        }
+
+        public static void SeedBulkSites(CloudWorksDbContext context, int count)
+        {
+            var sites = Enumerable.Range(1, count).Select(i => new Site
+            {
+                Id = Guid.NewGuid(),
+                Name = $"Site {i}"
+            }).ToList();
+
+            context.Sites.AddRange(sites);
+            context.SaveChanges();
         }
     }
 }

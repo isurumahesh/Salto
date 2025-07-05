@@ -36,8 +36,7 @@ namespace CloudWorks.IntegrationTests.Configuration
                 var db = scope.ServiceProvider.GetRequiredService<CloudWorksDbContext>();
                 db.Database.EnsureCreated();
                 TestDbSeeder.Seed(db);
-
-                services.Configure<TestAuthHandlerOptions>(options => options.DefaultUserId = DefaultUserId);
+                TestDbSeeder.SeedBulkSites(db, 10000);
 
                 services.AddAuthentication(options =>
                 {
@@ -45,7 +44,12 @@ namespace CloudWorks.IntegrationTests.Configuration
                     options.DefaultScheme = TestAuthHandler.AuthenticationScheme;
                     options.DefaultChallengeScheme = TestAuthHandler.AuthenticationScheme;
                 })
-                    .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(TestAuthHandler.AuthenticationScheme, options => { });
+                .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(
+                    TestAuthHandler.AuthenticationScheme,
+                    options =>
+                    {
+                        options.DefaultUserId = DefaultUserId;
+                    });
             });
 
             builder.UseEnvironment("Test");

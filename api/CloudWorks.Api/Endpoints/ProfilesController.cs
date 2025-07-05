@@ -36,7 +36,7 @@ namespace CloudWorks.Api.Endpoints
 
             var command = new AddProfileCommand(request);
             var profile = await _mediator.Send(command, cancellationToken);
-            return CreatedAtAction(nameof(GetById), new { id = profile.Id }, profile);
+            return CreatedAtAction(nameof(GetById), new { profileId = profile.Id }, profile);
         }
 
         [HttpGet]
@@ -47,11 +47,11 @@ namespace CloudWorks.Api.Endpoints
             return Ok(result);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{profileId:guid}")]
         [ProducesResponseType(typeof(ProfileDTO), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById([FromRoute] Guid profileId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetProfileByIdQuery(id), cancellationToken);
+            var result = await _mediator.Send(new GetProfileByIdQuery(profileId), cancellationToken);
             return Ok(result);
         }
     }

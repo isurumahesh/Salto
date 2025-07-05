@@ -29,7 +29,20 @@ namespace CloudWorks.IntegrationTests.Configuration
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, "Test user") };
+            if (!Request.Headers.ContainsKey("Authorization") || Request.Headers["Authorization"] != "Test")
+            {
+                return Task.FromResult(AuthenticateResult.Fail("No or Invalid Authorization"));
+            }
+
+            var defaultUserId = Options.DefaultUserId;
+
+            var claims = new List<Claim>
+             {
+                new Claim(ClaimTypes.Name, "Test user"),
+                new Claim("scope", "scwapi:manage"),
+                new Claim("scope", "scwapi:use"),
+                new Claim(ClaimTypes.Role, "Administrator")
+            };
 
             if (Context.Request.Headers.TryGetValue(UserId, out var userId))
             {
@@ -37,16 +50,14 @@ namespace CloudWorks.IntegrationTests.Configuration
             }
             else
             {
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, _defaultUserId));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, defaultUserId));
             }
 
             var identity = new ClaimsIdentity(claims, AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
 
-            var result = AuthenticateResult.Success(ticket);
-
-            return Task.FromResult(result);
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
     }
 }

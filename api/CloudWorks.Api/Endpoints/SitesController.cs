@@ -53,7 +53,7 @@ public class SitesController : ControllerBase
     }
 
     [HttpPost]
-   [Authorize(Policy = "ManageAccess")]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post(AddSiteDTO addSiteDTO, CancellationToken cancellationToken)
