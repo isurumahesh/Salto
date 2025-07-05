@@ -22,6 +22,7 @@ namespace CloudWorks.Application.Commands.Sites
             }
 
             await _repository.DeleteAsync(existingSite, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

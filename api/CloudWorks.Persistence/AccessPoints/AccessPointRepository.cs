@@ -20,26 +20,30 @@ namespace CloudWorks.Persistence.AccessPoints
         public IQueryable<AccessPoint> QueryBySiteId(Guid siteId)
         {
             return _context.AccessPoints
-                .AsNoTracking() 
+                .AsNoTracking()
                 .Where(ap => ap.SiteId == siteId);
         }
 
         public async Task<AccessPoint> AddAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
         {
             await _context.AccessPoints.AddAsync(accessPoint, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
             return accessPoint;
         }
 
-        public async Task UpdateAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
+        public Task UpdateAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
         {
             _context.AccessPoints.Update(accessPoint);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
+        public Task DeleteAsync(AccessPoint accessPoint, CancellationToken cancellationToken)
         {
             _context.AccessPoints.Remove(accessPoint);
+            return Task.CompletedTask;
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

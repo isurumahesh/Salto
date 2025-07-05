@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using CloudWorks.Application.DTOs.Bookings;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Sites;
-using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.Bookings;
-using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

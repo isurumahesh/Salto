@@ -7,7 +7,7 @@ namespace CloudWorks.Application.Validators
     {
         public AddSiteValidator()
         {
-            RuleFor(x => x.Name).NotEmpty().MaximumLength(10);
+            RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
         }
     }
 }

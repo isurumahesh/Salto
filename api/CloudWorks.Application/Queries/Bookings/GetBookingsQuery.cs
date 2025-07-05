@@ -2,7 +2,6 @@
 using CloudWorks.Application.Constants;
 using CloudWorks.Application.DTOs.Bookings;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Data.Contracts.Entities;
 using MediatR;
 
 namespace CloudWorks.Application.Queries.Bookings

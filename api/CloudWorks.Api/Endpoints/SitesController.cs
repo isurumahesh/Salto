@@ -41,8 +41,6 @@ public class SitesController : ControllerBase
     public async Task<IActionResult> GetSiteById(Guid siteId, CancellationToken cancellationToken)
     {
         var site = await _mediator.Send(new GetSiteByIdQuery(siteId), cancellationToken);
-        if (site == null)
-            return NotFound();
         return Ok(site);
     }
 
@@ -55,7 +53,7 @@ public class SitesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "ManageAccess")]
+   [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Post(AddSiteDTO addSiteDTO, CancellationToken cancellationToken)
@@ -66,7 +64,7 @@ public class SitesController : ControllerBase
             return BadRequest(result.Errors);
 
         var createdSite = await _mediator.Send(new AddSiteCommand(addSiteDTO));
-        return CreatedAtAction(nameof(GetSiteById), new { id = createdSite.Id }, createdSite);
+        return CreatedAtAction(nameof(GetSiteById), new { siteId = createdSite.Id }, createdSite);
     }
 
     [HttpPut("{siteId:guid}")]

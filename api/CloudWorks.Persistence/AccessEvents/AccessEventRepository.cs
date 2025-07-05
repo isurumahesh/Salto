@@ -2,7 +2,6 @@
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.AccessEvents;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 namespace CloudWorks.Persistence.AccessEvents
 {
@@ -18,7 +17,7 @@ namespace CloudWorks.Persistence.AccessEvents
         public async Task<AccessEvent> AddAsync(AccessEvent accessEvent, CancellationToken cancellationToken)
         {
             await _dbContext.AccessEvents.AddAsync(accessEvent);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken);
             return accessEvent;
         }
 
@@ -32,6 +31,11 @@ namespace CloudWorks.Persistence.AccessEvents
                 .AsSplitQuery()
                 .OrderByDescending(e => e.Timestamp)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

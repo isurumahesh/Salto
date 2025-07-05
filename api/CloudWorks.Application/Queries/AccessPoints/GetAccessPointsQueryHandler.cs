@@ -2,9 +2,7 @@
 using CloudWorks.Application.Constants;
 using CloudWorks.Application.DTOs.AccessPoints;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Services;
-using CloudWorks.Data.Contracts.Models;
 using CloudWorks.Services.Contracts.AccessPoints;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +14,10 @@ namespace CloudWorks.Application.Queries.AccessPoints
         private readonly IAccessPointRepository _repository;
         private readonly ICurrentUserService _currentUser;
         private readonly IMapper _mapper;
-      
-        public GetAccessPointsQueryHandler(IAccessPointRepository repository,  ICurrentUserService currentUser, IMapper mapper)
+
+        public GetAccessPointsQueryHandler(IAccessPointRepository repository, ICurrentUserService currentUser, IMapper mapper)
         {
-            _repository = repository;         
+            _repository = repository;
             _mapper = mapper;
             _currentUser = currentUser;
         }
@@ -56,7 +54,7 @@ namespace CloudWorks.Application.Queries.AccessPoints
                 PageNumber = filter.PageNumber,
                 PageSize = filter.PageSize
             };
-         
+
             return result;
         }
     }

@@ -3,12 +3,7 @@ using CloudWorks.Data.Database;
 using Duende.IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Infrastructure.Services
 {
@@ -53,5 +48,4 @@ namespace CloudWorks.Infrastructure.Services
             return _cachedProfileId;
         }
     }
-
 }

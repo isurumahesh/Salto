@@ -1,4 +1,5 @@
 using CloudWorks.Api;
+using CloudWorks.Api.MiddleWare;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
@@ -64,6 +65,7 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddAppDI(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
+app.UseMiddleware<CustomErrorMiddleWare>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

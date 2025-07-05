@@ -1,18 +1,12 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Data.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.IntegrationTests.Configuration
 {
     public static class TestDbSeeder
     {
-        public static void Seed(CloudWorksDbContext context)
-        {
-            // Clear existing data
+        public static async Task Seed(CloudWorksDbContext context)
+        {          
             context.AccessEvents.RemoveRange(context.AccessEvents);
             context.Schedules.RemoveRange(context.Schedules);
             context.Bookings.RemoveRange(context.Bookings);
@@ -21,15 +15,13 @@ namespace CloudWorks.IntegrationTests.Configuration
             context.Profiles.RemoveRange(context.Profiles);
             context.Sites.RemoveRange(context.Sites);
             context.SaveChanges();
-
-            // 1. Create Site(s)
+        
             var site = new Site
             {
                 Id = Guid.NewGuid(),
                 Name = "Test Site"
             };
 
-            // 2. Create Profile(s)
             var profile = new Profile
             {
                 Id = Guid.NewGuid(),
@@ -37,7 +29,6 @@ namespace CloudWorks.IntegrationTests.Configuration
                 IdentityId = Guid.NewGuid()
             };
 
-            // 3. Create SiteProfile(s)
             var siteProfile = new SiteProfile
             {
                 Id = Guid.NewGuid(),
@@ -45,7 +36,6 @@ namespace CloudWorks.IntegrationTests.Configuration
                 ProfileId = profile.Id
             };
 
-            // 4. Create AccessPoint(s)
             var accessPoint = new AccessPoint
             {
                 Id = Guid.NewGuid(),
@@ -53,7 +43,6 @@ namespace CloudWorks.IntegrationTests.Configuration
                 SiteId = site.Id
             };
 
-            // 5. Create Booking(s)
             var booking = new Booking
             {
                 Id = Guid.NewGuid(),
@@ -63,18 +52,16 @@ namespace CloudWorks.IntegrationTests.Configuration
                 Profiles = new List<SiteProfile> { siteProfile }
             };
 
-            // 6. Create Schedule(s)
             var schedule = new Schedule
             {
                 Id = Guid.NewGuid(),
                 StartUtc = DateTime.UtcNow.AddHours(-1),
                 EndUtc = DateTime.UtcNow.AddHours(1),
-                Value = "BEGIN:VCALENDAR...", // Put your iCal string or leave as dummy.
+                Value = "BEGIN:VCALENDAR...",
                 SiteId = site.Id,
                 BookingId = booking.Id
             };
 
-            // 7. Create AccessEvent(s)
             var accessEvent = new AccessEvent
             {
                 Id = Guid.NewGuid(),
@@ -86,17 +73,16 @@ namespace CloudWorks.IntegrationTests.Configuration
                 Reason = "Test entry"
             };
 
-            // Add all entities in correct order
-            context.Sites.Add(site);
-            context.Profiles.Add(profile);
-            context.SiteProfiles.Add(siteProfile);
-            context.AccessPoints.Add(accessPoint);
-            context.Bookings.Add(booking);
-            context.Schedules.Add(schedule);
-            context.AccessEvents.Add(accessEvent);
+            await context.Sites.AddAsync(site);
+            await context.Profiles.AddAsync(profile);
+            await context.SiteProfiles.AddAsync(siteProfile);
+            await context.AccessPoints.AddAsync(accessPoint);
+            await context.Bookings.AddAsync(booking);
+            await context.Schedules.AddAsync(schedule);
+            await context.AccessEvents.AddAsync(accessEvent);
+            await context.SaveChangesAsync();
 
-            context.SaveChanges();
+            TestData.Set(site.Id, profile.Id, accessPoint.Id, booking.Id);
         }
     }
-
 }

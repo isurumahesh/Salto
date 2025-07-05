@@ -20,6 +20,7 @@ namespace CloudWorks.Application.Commands.SiteProfiles
         {
             var entity = _mapper.Map<SiteProfile>(request.Dto);
             await _repository.AddAsync(entity, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
             return entity;
         }
     }

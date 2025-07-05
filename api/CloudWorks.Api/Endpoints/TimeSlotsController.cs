@@ -1,6 +1,4 @@
-﻿using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Schedules;
-using CloudWorks.Application.DTOs.Sites;
+﻿using CloudWorks.Application.DTOs.Schedules;
 using CloudWorks.Application.DTOs.TimeSlots;
 using CloudWorks.Application.Queries.Schedules;
 using MediatR;

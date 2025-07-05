@@ -15,6 +15,7 @@ namespace CloudWorks.Services.Contracts.Bookings
         Task DeleteAsync(Booking booking, CancellationToken cancellationToken);
 
         Task<bool> HasValidBookingAsync(Guid profileId, Guid accessPointId, Guid siteId, DateTime now, CancellationToken cancellationToken);
-      
+
+        Task SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

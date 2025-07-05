@@ -2,12 +2,6 @@
 using CloudWorks.Application.DTOs.Schedules;
 using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.DTOs.Sites;
-using CloudWorks.Data.Contracts.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.DTOs.Bookings
 {

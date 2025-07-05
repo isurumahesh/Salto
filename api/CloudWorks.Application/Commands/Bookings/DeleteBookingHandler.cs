@@ -22,7 +22,7 @@ namespace CloudWorks.Application.Commands.Bookings
             }
 
             await _repository.DeleteAsync(booking, cancellationToken);
-
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace CloudWorks.Application.Commands.Profiles
         {
             var profile = _mapper.Map<Profile>(request.AddProfileDTO);
             await _repository.AddAsync(profile, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
             return profile;
         }
     }

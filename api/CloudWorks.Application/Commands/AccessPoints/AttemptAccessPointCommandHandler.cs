@@ -53,7 +53,9 @@ namespace CloudWorks.Application.Commands.AccessPoints
                 Timestamp = command.Now,
                 Reason = hasValidBooking ? "Valid booking" : $"Access denied: {errorMessage ?? "No valid booking"}"
             }, cancellationToken);
-       
+
+            await _accessEventRepository.SaveChangesAsync(cancellationToken);
+
             var result = new AccessPointCommandResult<OpenAccessPointCommand>()
             {
                 Command = command.OpenAccessPointCommand,

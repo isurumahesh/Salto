@@ -43,7 +43,7 @@ namespace CloudWorks.Application.Commands.Bookings
                 });
             }
 
-            return await _bookingRepository.AddAsync(
+            var booking = await _bookingRepository.AddAsync(
                 command.SiteId,
                 command.Request.Name,
                 command.Request.SiteProfiles,
@@ -51,6 +51,10 @@ namespace CloudWorks.Application.Commands.Bookings
                 schedules,
                 cancellationToken
             );
+
+            await _bookingRepository.SaveChangesAsync(cancellationToken);
+
+            return booking;
         }
     }
 }

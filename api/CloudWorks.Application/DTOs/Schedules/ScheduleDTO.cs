@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CloudWorks.Application.DTOs.Schedules
+﻿namespace CloudWorks.Application.DTOs.Schedules
 {
     public record ScheduleDTO
     {
@@ -13,6 +7,6 @@ namespace CloudWorks.Application.DTOs.Schedules
         public DateTime StartUtc { get; init; }
         public DateTime EndUtc { get; init; }
 
-        public string Value { get; set; } 
+        public string Value { get; set; }
     }
 }

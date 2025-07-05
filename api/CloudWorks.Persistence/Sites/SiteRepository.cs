@@ -23,19 +23,18 @@ namespace CloudWorks.Persistence.Sites
         public async Task AddAsync(Site site, CancellationToken cancellationToken)
         {
             await _context.Sites.AddAsync(site, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(Site site, CancellationToken cancellationToken)
+        public Task UpdateAsync(Site site, CancellationToken cancellationToken)
         {
             _context.Sites.Update(site);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(Site site, CancellationToken cancellationToken)
+        public Task DeleteAsync(Site site, CancellationToken cancellationToken)
         {
             _context.Sites.Remove(site);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task<IEnumerable<Profile>> GetUsersInSiteAsync(Guid siteId, CancellationToken cancellationToken)
@@ -45,6 +44,11 @@ namespace CloudWorks.Persistence.Sites
                 .Include(sp => sp.Profile)
                 .Select(sp => sp.Profile)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

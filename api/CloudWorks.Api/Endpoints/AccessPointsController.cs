@@ -68,7 +68,7 @@ public class AccessPointsController : ControllerBase
             return BadRequest(result.Errors);
 
         var accessPoint = await _mediator.Send(new AddAccessPointCommand(addAccessPointDTO));
-        return CreatedAtAction(nameof(GetById), new { id = accessPoint.Id }, accessPoint);
+        return CreatedAtAction(nameof(GetById), new { siteId = addAccessPointDTO.SiteId, accessPointId = accessPoint.Id }, accessPoint);
     }
 
     [HttpPut("{accessPointId:guid}")]

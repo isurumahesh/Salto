@@ -17,7 +17,6 @@ namespace CloudWorks.Persistence.Profiles
         public async Task<Profile> AddAsync(Profile profile, CancellationToken cancellationToken)
         {
             await _context.Profiles.AddAsync(profile, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
             return profile;
         }
 
@@ -36,6 +35,11 @@ namespace CloudWorks.Persistence.Profiles
             return await _context.Profiles
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

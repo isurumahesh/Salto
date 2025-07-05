@@ -20,6 +20,7 @@ namespace CloudWorks.Application
             CreateMap<AccessPoint, AccessPointDTO>().ReverseMap();
             CreateMap<Site, SiteDTO>().ReverseMap();
             CreateMap<AddProfileDTO, Profile>();
+            CreateMap<Profile, ProfileDTO>();
             CreateMap<AddSiteProfileDTO, SiteProfile>();
             CreateMap<AccessEvent, AccessEventDTO>()
             .ForMember(dest => dest.AccessPointName, opt => opt.MapFrom(src => src.AccessPoint!.Name))

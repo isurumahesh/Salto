@@ -3,7 +3,6 @@ using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.Queries.SiteProfiles;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudWorks.Api.Endpoints
@@ -27,7 +26,7 @@ namespace CloudWorks.Api.Endpoints
             var result = await _mediator.Send(new AddSiteProfileCommand(dto), cancellationToken);
             return CreatedAtAction(nameof(GetByProfileId), new { profileId = result.ProfileId }, result);
         }
-      
+
         [HttpGet("/profiles/{profileId}/siteprofiles")]
         public async Task<IActionResult> GetByProfileId(Guid profileId, CancellationToken cancellationToken)
         {
@@ -37,7 +36,7 @@ namespace CloudWorks.Api.Endpoints
                 return NotFound();
             return Ok(profile);
         }
-     
+
         [HttpGet("/sites/{siteId}/siteprofiles")]
         public async Task<IActionResult> GetBySiteId(Guid siteId, CancellationToken cancellationToken)
         {

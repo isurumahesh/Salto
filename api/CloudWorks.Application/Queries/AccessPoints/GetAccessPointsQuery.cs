@@ -11,5 +11,4 @@ namespace CloudWorks.Application.Queries.AccessPoints
         public string CacheKey => $"accesspoints:{PagingFilter.PageNumber}:{PagingFilter.PageSize}:{PagingFilter.Search}";
         public TimeSpan CacheDuration => TimeSpan.FromMinutes(CacheConstants.CacheDurationInMinutes);
     }
-
 }

@@ -17,7 +17,6 @@ namespace CloudWorks.Persistence.SiteProfiles
         public async Task AddAsync(SiteProfile siteProfile, CancellationToken cancellationToken)
         {
             await _context.SiteProfiles.AddAsync(siteProfile, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<SiteProfile>> GetBySiteIdAsync(Guid siteId, CancellationToken cancellationToken)
@@ -32,6 +31,11 @@ namespace CloudWorks.Persistence.SiteProfiles
         {
             return await _context.SiteProfiles
                 .FirstOrDefaultAsync(sp => sp.ProfileId == profileId, cancellationToken);
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

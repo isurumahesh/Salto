@@ -1,9 +1,7 @@
 ﻿using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Data.Database;
 using CloudWorks.Services.Contracts.Bookings;
-using Ical.Net;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 namespace CloudWorks.Persistence.Bookings
 {
@@ -34,10 +32,10 @@ namespace CloudWorks.Persistence.Bookings
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-        public async Task DeleteAsync(Booking booking, CancellationToken cancellationToken)
-        {           
+        public Task DeleteAsync(Booking booking, CancellationToken cancellationToken)
+        {
             _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public async Task<Booking> AddAsync(Guid siteId, string name, List<Guid> siteProfiles, List<Guid> accessPoints, List<Schedule> schedules, CancellationToken cancellationToken)
@@ -61,7 +59,6 @@ namespace CloudWorks.Persistence.Bookings
             };
 
             await _context.Bookings.AddAsync(booking, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
 
             return booking;
         }
@@ -81,5 +78,9 @@ namespace CloudWorks.Persistence.Bookings
                     cancellationToken);
         }
 
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

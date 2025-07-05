@@ -73,11 +73,11 @@ namespace CloudWorks.Persistence.Schedules
                 foreach (var ap in schedule.Booking.AccessPoints)
                 {
                     if (accessPointIds.Contains(ap.Id))
-                    {                        
+                    {
                         var actualStart = schedule.StartUtc > start ? schedule.StartUtc : start;
                         var actualEnd = schedule.EndUtc < end ? schedule.EndUtc : end;
 
-                        if (actualEnd > actualStart) 
+                        if (actualEnd > actualStart)
                         {
                             result.Add(new OccupiedSlotDto
                             {

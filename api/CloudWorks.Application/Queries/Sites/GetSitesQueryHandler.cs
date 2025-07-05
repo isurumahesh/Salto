@@ -3,7 +3,6 @@ using CloudWorks.Application.Constants;
 using CloudWorks.Application.DTOs.Pagination;
 using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Services;
-using CloudWorks.Data.Contracts.Models;
 using CloudWorks.Services.Contracts.Sites;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,18 +24,17 @@ namespace CloudWorks.Application.Queries.Sites
 
         public async Task<PagedResult<SiteDTO>> Handle(GetSitesQuery request, CancellationToken cancellationToken)
         {
-
             var filter = request.PagingFilter;
 
             var query = _siteRepository.Query();
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
                 query = query.Where(s => s.Name.Contains(filter.Search));
-      
-            if (_currentUser.HasRole(UserRoles.User))
+
+            if (!_currentUser.HasRole(UserRoles.Administrator))
             {
                 var profileId = await _currentUser.GetProfileIdAsync();
-              
+
                 query = query.Where(site =>
                     site.Profiles.Any(p => p.ProfileId == profileId));
             }

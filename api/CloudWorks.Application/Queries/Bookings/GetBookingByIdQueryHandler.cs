@@ -3,11 +3,6 @@ using CloudWorks.Application.DTOs.Bookings;
 using CloudWorks.Application.Exceptions;
 using CloudWorks.Services.Contracts.Bookings;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Queries.Bookings
 {

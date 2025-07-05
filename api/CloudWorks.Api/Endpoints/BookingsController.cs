@@ -1,9 +1,7 @@
 ﻿using CloudWorks.Application.Commands.Bookings;
 using CloudWorks.Application.DTOs.Bookings;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Queries.Bookings;
-using CloudWorks.Data.Contracts.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -37,9 +35,8 @@ public class BookingsController : ControllerBase
         if (!result.IsValid)
             return BadRequest(result.Errors);
 
-        var booking = _mediator.Send(new AddBookingCommand(siteId, request), cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
-
+        var booking = await _mediator.Send(new AddBookingCommand(siteId, request), cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { siteId = siteId, bookingId = booking.Id }, booking);
     }
 
     [HttpGet]
@@ -50,7 +47,6 @@ public class BookingsController : ControllerBase
         var result = await _mediator.Send(new GetBookingsQuery(pagingFilter), cancellationToken);
         return Ok(result);
     }
-
 
     [HttpGet("{bookingId:guid}")]
     [Authorize]

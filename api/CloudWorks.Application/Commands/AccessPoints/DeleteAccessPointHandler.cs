@@ -22,6 +22,8 @@ namespace CloudWorks.Application.Commands.AccessPoints
             }
 
             await _repository.DeleteAsync(accessPoint, cancellationToken);
+
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

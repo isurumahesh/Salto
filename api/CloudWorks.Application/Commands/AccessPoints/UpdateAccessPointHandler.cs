@@ -27,6 +27,7 @@ namespace CloudWorks.Application.Commands.AccessPoints
             var accessPoint = _mapper.Map(request.UpdateAccessPointDTO, existingAccessPoint);
 
             await _repository.UpdateAsync(accessPoint, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }

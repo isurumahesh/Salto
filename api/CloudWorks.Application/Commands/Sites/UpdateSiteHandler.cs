@@ -26,6 +26,7 @@ namespace CloudWorks.Application.Commands.Sites
 
             var site = _mapper.Map(request.UpdateSiteDTO, existingSite);
             await _repository.UpdateAsync(site, cancellationToken);
+            await _repository.SaveChangesAsync(cancellationToken);
         }
     }
 }
