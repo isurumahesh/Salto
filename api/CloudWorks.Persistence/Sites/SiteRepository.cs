@@ -18,7 +18,7 @@ namespace CloudWorks.Persistence.Sites
         public async Task<Site?> GetByIdAsync(Guid id) =>
             await _context.Sites.FindAsync(id);
 
-        public IQueryable<Site> Query() => _context.Sites.AsQueryable();
+        public IQueryable<Site> Query() => _context.Sites.AsNoTracking().AsQueryable();
 
         public async Task AddAsync(Site site)
         {

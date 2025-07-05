@@ -1,9 +1,9 @@
 ﻿namespace CloudWorks.Application.DTOs.AccessPoints
 {
-    public class AccessPointDTO
+    public record AccessPointDTO
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = default!;
-        public Guid SiteId { get; set; }
+        public Guid Id { get; init; }
+        public string Name { get; init; } = default!;
+        public Guid SiteId { get; init; }
     }
 }

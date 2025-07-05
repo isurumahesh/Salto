@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloudWorks.Application.DTOs.TimeSlots
 {
-    public class GetContinuousTimeSlotsRequestDTO:TimeSlotDTO
+    public record GetContinuousTimeSlotsRequestDTO:TimeSlotDTO
     {
         public List<Guid> AccessPointIds { get; set; }
         public Guid ProfileId { get; set; }

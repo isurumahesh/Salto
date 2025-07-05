@@ -14,12 +14,14 @@ namespace CloudWorks.Application.Queries.AccessPoints
     public class GetAccessPointsQueryHandler : IRequestHandler<GetAccessPointsQuery, PagedResult<AccessPointDTO>>
     {
         private readonly IAccessPointRepository _repository;
+        private readonly ICurrentUserService _currentUser;
         private readonly IMapper _mapper;
       
-        public GetAccessPointsQueryHandler(IAccessPointRepository repository, IMapper mapper)
+        public GetAccessPointsQueryHandler(IAccessPointRepository repository,  ICurrentUserService currentUser, IMapper mapper)
         {
             _repository = repository;         
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<PagedResult<AccessPointDTO>> Handle(GetAccessPointsQuery request, CancellationToken cancellationToken)
@@ -30,6 +32,14 @@ namespace CloudWorks.Application.Queries.AccessPoints
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
                 query = query.Where(ap => ap.Name.Contains(filter.Search));
+
+            if (_currentUser.HasRole(UserRoles.User))
+            {
+                var profileId = await _currentUser.GetProfileIdAsync();
+
+                query = query.Where(point =>
+                    point.Site.Profiles.Any(p => p.ProfileId == profileId));
+            }
 
             var totalCount = await query.CountAsync(cancellationToken);
 

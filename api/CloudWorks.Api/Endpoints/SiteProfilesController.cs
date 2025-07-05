@@ -3,6 +3,7 @@ using CloudWorks.Application.DTOs.SiteProfiles;
 using CloudWorks.Application.Queries.SiteProfiles;
 using CloudWorks.Data.Contracts.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,8 @@ namespace CloudWorks.Api.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "UserAccess")]
+    [Authorize(Roles = "Administrator")]
     public class SiteProfilesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -25,9 +28,8 @@ namespace CloudWorks.Api.Endpoints
             var result = await _mediator.Send(new AddSiteProfileCommand(dto), cancellationToken);
             return CreatedAtAction(nameof(GetByProfileId), new { profileId = result.ProfileId }, result);
         }
-
-        // GET: api/profiles/{profileId}/siteprofiles
-        [HttpGet("api/profiles/{profileId}/siteprofiles")]
+      
+        [HttpGet("/profiles/{profileId}/siteprofiles")]
         public async Task<IActionResult> GetByProfileId(Guid profileId, CancellationToken cancellationToken)
         {
             var query = new GetSiteProfileByProfileIdQuery(profileId);
@@ -36,9 +38,8 @@ namespace CloudWorks.Api.Endpoints
                 return NotFound();
             return Ok(profile);
         }
-
-        // GET: api/sites/{siteId}/siteprofiles
-        [HttpGet("api/sites/{siteId}/siteprofiles")]
+     
+        [HttpGet("/sites/{siteId}/siteprofiles")]
         public async Task<IActionResult> GetBySiteId(Guid siteId, CancellationToken cancellationToken)
         {
             var query = new GetSiteProfileBySiteIdQuery(siteId);

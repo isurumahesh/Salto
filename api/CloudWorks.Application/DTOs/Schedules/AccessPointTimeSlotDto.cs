@@ -2,9 +2,9 @@
 
 namespace CloudWorks.Application.DTOs.Schedules
 {
-    public class AccessPointTimeSlotDto
+    public record AccessPointTimeSlotDto
     {
-        public Guid AccessPointId { get; set; }
-        public List<TimeSlotDTO> TimeSlots { get; set; } = new();
+        public Guid AccessPointId { get; init; }
+        public List<TimeSlotDTO> TimeSlots { get; init; } = [];
     }
 }

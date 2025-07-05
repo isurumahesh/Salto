@@ -18,16 +18,19 @@ namespace CloudWorks.Persistence.Bookings
         public async Task<Booking?> GetByIdAsync(Guid id) =>
             await _context.Bookings.FindAsync(id);
 
-        public async Task<IEnumerable<Booking>> GetAllAsync() =>
-            await _context.Bookings
+        public IQueryable<Booking> Query() =>
+                 _context.Bookings
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(b => b.Schedules)
                 .Include(b => b.Profiles)
                 .Include(b => b.AccessPoints)
-                .ToListAsync();
+                .AsQueryable();
 
         public async Task<IEnumerable<Booking>> GetBySiteIdAsync(Guid siteId) =>
             await _context.Bookings
                 .Where(b => b.SiteId == siteId)
+                .AsNoTracking()
                 .ToListAsync();
 
         public async Task DeleteAsync(Guid id)
@@ -55,14 +58,6 @@ namespace CloudWorks.Persistence.Bookings
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
             _context.SaveChangesAsync(cancellationToken);
-
-        private bool IsNowInSchedule(string icalString, DateTime nowUtc)
-        {
-            var calendar = Calendar.Load(icalString);
-            var events = calendar.Events;
-
-            return events.Any(ev =>
-                ev.Start.AsUtc <= nowUtc && ev.End.AsUtc >= nowUtc);
-        }
+      
     }
 }

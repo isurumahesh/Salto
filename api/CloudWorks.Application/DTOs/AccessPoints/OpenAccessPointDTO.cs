@@ -1,6 +1,6 @@
 ﻿namespace CloudWorks.Api.Endpoints.Requests;
 
-public class OpenAccessPointRequest
+public class OpenAccessPointDTO
 {
     public Guid ProfileId { get; set; }
 }

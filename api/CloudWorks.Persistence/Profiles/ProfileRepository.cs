@@ -29,5 +29,17 @@ namespace CloudWorks.Persistence.Profiles
         {
             return await _context.Profiles.FirstOrDefaultAsync(p => p.Email == email, cancellationToken);
         }
+
+        public async Task<Profile?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _context.Profiles.FindAsync(id, cancellationToken);
+        }
+
+        public async Task<List<Profile>> GetAllAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Profiles
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+        }
     }
 }

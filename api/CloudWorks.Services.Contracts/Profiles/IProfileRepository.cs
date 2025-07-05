@@ -11,5 +11,7 @@ namespace CloudWorks.Services.Contracts.Profiles
     {
         Task AddAsync(Profile profile, CancellationToken cancellationToken);
         Task<Profile?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+        Task<Profile?> GetByIdAsync(Guid id, CancellationToken cancellationToken); 
+        Task<List<Profile>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

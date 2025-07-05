@@ -49,7 +49,7 @@ namespace CloudWorks.Application.Queries.Schedules
                 else
                 {
                     var last = merged.Last();
-                    if (slot.Start <= last.End) // Overlap or adjacent
+                    if (slot.Start <= last.End)
                     {
                         last.End = slot.End > last.End ? slot.End : last.End;
                     }

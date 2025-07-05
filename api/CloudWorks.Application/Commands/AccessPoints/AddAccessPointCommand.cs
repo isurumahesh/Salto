@@ -3,5 +3,5 @@ using MediatR;
 
 namespace CloudWorks.Application.Commands.AccessPoints
 {
-    public record AddAccessPointCommand(AddAccessPointDTO AddAccessPointDTO) : IRequest<Guid>;
+    public record AddAccessPointCommand(AddAccessPointDTO AddAccessPointDTO) : IRequest<AccessPointDTO>;
 }

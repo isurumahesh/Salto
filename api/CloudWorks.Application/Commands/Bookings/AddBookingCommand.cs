@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace CloudWorks.Application.Commands.Bookings
 {
-    public record AddBookingCommand(Guid SiteId, AddBookingRequest Request) : IRequest<Booking>;
+    public record AddBookingCommand(Guid SiteId, AddBookingDTO Request) : IRequest<Booking>;
 }

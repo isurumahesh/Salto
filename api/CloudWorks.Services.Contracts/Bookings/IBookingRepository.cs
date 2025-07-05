@@ -6,7 +6,7 @@ namespace CloudWorks.Services.Contracts.Bookings
     {
         Task<Booking?> GetByIdAsync(Guid id);
 
-        Task<IEnumerable<Booking>> GetAllAsync();
+        IQueryable<Booking> Query();
 
         Task<IEnumerable<Booking>> GetBySiteIdAsync(Guid siteId);
 

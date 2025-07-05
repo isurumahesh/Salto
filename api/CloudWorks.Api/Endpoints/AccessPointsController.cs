@@ -2,22 +2,19 @@
 using CloudWorks.Application.Commands.AccessPoints;
 using CloudWorks.Application.DTOs.AccessPoints;
 using CloudWorks.Application.DTOs.Pagination;
-using CloudWorks.Application.DTOs.Sites;
 using CloudWorks.Application.Queries.AccessPoints;
-using CloudWorks.Data.Contracts.Entities;
 using CloudWorks.Services.Contracts.AccessPoints;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CloudWorks.Api.Endpoints;
 
 [ApiController]
 [Route("sites/{siteId:guid}/accessPoints")]
-//[Authorize]
+
 public class AccessPointsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -32,16 +29,27 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     [ProducesResponseType(typeof(PagedResult<AccessPointDTO>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Get(Guid siteId, [FromQuery] PagingFilter filter, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get([FromRoute] Guid siteId, [FromQuery] PagingFilter filter, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetAccessPointsQuery(siteId, filter), cancellationToken);
         return Ok(result);
     }
 
+    [HttpGet("{accessPointId:guid}")]
+    [Authorize]
+    [ProducesResponseType(typeof(AccessPointDTO), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetById([FromRoute] Guid accessPointId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetAccessPointByIdQuery(accessPointId), cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost("{accessPointId:guid}/open")]
+    [Authorize]
     [ProducesResponseType(typeof(AccessPointCommandResult<OpenAccessPointCommand>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Open([FromRoute] Guid siteId, [FromRoute] Guid accessPointId, [FromBody] OpenAccessPointRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Open([FromRoute] Guid siteId, [FromRoute] Guid accessPointId, [FromBody] OpenAccessPointDTO request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new AttemptAccessPointCommand(
         new OpenAccessPointCommand() { AccessPointId = accessPointId, ProfileId = request.ProfileId }, siteId, DateTime.UtcNow), cancellationToken);
@@ -50,26 +58,28 @@ public class AccessPointsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Add([FromBody] AddAccessPointDTO addAccessPointDTO)
+    public async Task<IActionResult> Add([FromBody] AddAccessPointDTO addAccessPointDTO, CancellationToken cancellationToken)
     {
         ValidationResult result = await _addValidator.ValidateAsync(addAccessPointDTO);
 
         if (!result.IsValid)
             return BadRequest(result.Errors);
 
-        await _mediator.Send(new AddAccessPointCommand(addAccessPointDTO));
-        return Created();
+        var accessPoint = await _mediator.Send(new AddAccessPointCommand(addAccessPointDTO));
+        return CreatedAtAction(nameof(GetById), new { id = accessPoint.Id }, accessPoint);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{accessPointId:guid}")]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAccessPointDTO updateAccessPointDTO)
+    public async Task<IActionResult> Update([FromRoute] Guid accessPointId, [FromBody] UpdateAccessPointDTO updateAccessPointDTO, CancellationToken cancellationToken)
     {
-        if (id != updateAccessPointDTO.Id)
+        if (accessPointId != updateAccessPointDTO.Id)
         {
             return BadRequest();
         }
@@ -83,12 +93,13 @@ public class AccessPointsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{accessPointId:guid}")]
+    [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete([FromRoute] Guid accessPointId)
     {
-        await _mediator.Send(new DeleteAccessPointCommand(id));
+        await _mediator.Send(new DeleteAccessPointCommand(accessPointId));
         return NoContent();
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace CloudWorks.Application.DTOs.Sites
 {
-    public class SiteDTO
+    public record SiteDTO
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = default!;
+        public Guid Id { get; init; }
+        public string Name { get; init; } = default!;
     }
 }

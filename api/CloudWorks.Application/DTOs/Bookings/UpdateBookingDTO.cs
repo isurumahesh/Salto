@@ -2,10 +2,11 @@
 
 namespace CloudWorks.Application.DTOs.Bookings;
 
-public class AddBookingRequest
+public record UpdateBookingDTO
 {
+    public Guid Id { get; init; }
     public string Name { get; set; }
     public List<Guid> SiteProfiles { get; set; } = [];
     public List<Guid> AccessPoints { get; set; } = [];
-    public List<ScheduleRequest> Schedules { get; set; } = [];
+    public List<ScheduleRequestDTO> Schedules { get; set; } = [];
 }

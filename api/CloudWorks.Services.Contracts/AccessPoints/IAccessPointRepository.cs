@@ -8,7 +8,7 @@ namespace CloudWorks.Services.Contracts.AccessPoints
 
         IQueryable<AccessPoint> QueryBySiteId(Guid siteId);
 
-        Task AddAsync(AccessPoint accessPoint);
+        Task<AccessPoint> AddAsync(AccessPoint accessPoint);
 
         Task UpdateAsync(AccessPoint accessPoint);
 

@@ -25,10 +25,11 @@ namespace CloudWorks.Persistence.AccessPoints
         public IQueryable<AccessPoint> QueryBySiteId(Guid siteId) =>
       _context.AccessPoints.Where(ap => ap.SiteId == siteId);
 
-        public async Task AddAsync(AccessPoint accessPoint)
+        public async Task<AccessPoint> AddAsync(AccessPoint accessPoint)
         {
             await _context.AccessPoints.AddAsync(accessPoint);
             await _context.SaveChangesAsync();
+            return accessPoint;
         }
 
         public async Task UpdateAsync(AccessPoint accessPoint)

@@ -29,13 +29,13 @@ public class SitesController : ControllerBase
     [HttpGet]
     [Authorize]
     [ProducesResponseType(typeof(PagedResult<SiteDTO>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Get([FromQuery] PagingFilter pagingFilter, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Get([FromQuery] PagingFilter pagingFilter, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetSitesQuery(pagingFilter), cancellationToken);
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [Authorize]
     [ProducesResponseType(typeof(SiteDTO), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetSiteById(Guid id, CancellationToken cancellationToken)
@@ -61,14 +61,14 @@ public class SitesController : ControllerBase
         return CreatedAtAction(nameof(GetSiteById), new { id = createdSite.Id }, createdSite);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{siteId:guid}")]
     [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateSite(Guid id, [FromBody] UpdateSiteDTO updateSiteDTO)
+    public async Task<IActionResult> UpdateSite([FromRoute] Guid siteId, [FromBody] UpdateSiteDTO updateSiteDTO, CancellationToken cancellationToken)
     {
-        if (id != updateSiteDTO.Id)
+        if (siteId != updateSiteDTO.Id)
         {
             return BadRequest();
         }
@@ -82,13 +82,13 @@ public class SitesController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{siteId:guid}")]
     [Authorize(Policy = "ManageAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteSite(Guid id)
+    public async Task<IActionResult> DeleteSite([FromRoute] Guid siteId, CancellationToken cancellationToken)
     {
-        await _mediator.Send(new DeleteSiteCommand(id));
+        await _mediator.Send(new DeleteSiteCommand(siteId));
         return NoContent();
     }
 }
